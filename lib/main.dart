@@ -1,3 +1,4 @@
+import 'package:falcon_corona_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/start_screen.dart';
 import 'screens/begin_screen.dart';
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Falcon',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         '/begin':(context) => BeginScreen(),
         '/temperature':(context) => TemperatureScreen(),
         '/inquarantine':(context) => InQuarantineScreen(),
-        '/warning':(context) => WarningScreen(),
+        '/warning':(context) => HomeScreen(),
       },
       );
   }
