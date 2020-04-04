@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:falcon_corona_app/screens/history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
@@ -19,18 +20,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   LocationData _location;
   StreamSubscription<LocationData> _locationSubscription;
-  String _error;
 
   Future<void> _listenLocation() async {
     _locationSubscription =
         location.onLocationChanged.handleError((dynamic err) {
-      setState(() {
-        _error = err.code;
-      });
       _locationSubscription.cancel();
     }).listen((LocationData currentLocation) {
       setState(() {
-        _error = null;
         _location = currentLocation;
       });
     });
@@ -47,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     WarningScreen(),
-    AOKScreen(),
+    HistoryScreen(),
     AlertScreen()
   ];
 
