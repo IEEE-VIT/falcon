@@ -3,7 +3,7 @@ import 'package:falcon_corona_app/screens/alert_screen.dart';
 import 'package:falcon_corona_app/screens/aok_screen.dart';
 import 'package:falcon_corona_app/screens/start_screen.dart';
 import 'package:falcon_corona_app/screens/warning_screen.dart';
-import 'package:falcon_corona_app/utils/location_tracking.dart';
+//import 'package:falcon_corona_app/utils/location_tracking.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     WarningScreen(),
-    ListenLocationWidget(),
+    //ListenLocationWidget(),
     AlertScreen()
   ];
 
