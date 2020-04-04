@@ -2,7 +2,7 @@ class Coordinate {
 
 	final double latitude;
 	final double longitude;
-	final DateTime datetime;
+	final String datetime;
 
 	Coordinate({
 		this.latitude,
@@ -14,7 +14,7 @@ factory	Coordinate.fromJson(Map<dynamic, dynamic> json) {
 		return Coordinate(
 				latitude: 0,
 				longitude: 0,
-				datetime: DateTime.now(),
+				datetime: DateTime.now().toString(),
 		);
 	}
 

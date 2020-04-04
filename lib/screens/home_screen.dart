@@ -3,11 +3,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'package:falcon_corona_app/screens/alert_screen.dart';
 import 'package:falcon_corona_app/screens/aok_screen.dart';
 import 'package:falcon_corona_app/screens/warning_screen.dart';
 import 'package:falcon_corona_app/services/databaseService.dart';
+import 'package:falcon_corona_app/models/coordinate.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,9 +19,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final Location location = Location();
 
+	Timer timer;
   LocationData _location;
   StreamSubscription<LocationData> _locationSubscription;
   String _error;
+	Database database;
 
   Future<void> _listenLocation() async {
     _locationSubscription =
@@ -51,15 +55,43 @@ class _HomeScreenState extends State<HomeScreen> {
     AlertScreen()
   ];
 
+	Future<void> _initDatabase() async {
+		print('Initializtion Started!');
+		Database db=await DatabaseService().initDatabase();
+		setState(() {
+				database=db;
+			});	
+	}
+	
+	Future<void> addNewEntry() {
+		Coordinate coordinate=Coordinate(
+				latitude: _location.latitude,
+				longitude: _location.longitude,
+				datetime: DateTime.now().toString()
+		);
+		print(coordinate.toJson());
+		DatabaseService().insertCoordinate(database, coordinate);	
+		return Future.value();
+	}
+
+	void _initializePage() async {
+		await _listenLocation();
+		await _initDatabase();
+		dynamic a=await DatabaseService().getAllCoordinates(database);
+		print(a);
+		//timer = Timer.periodic(Duration(seconds: 15), (Timer t) => addNewEntry());
+	}
+
   @override
   void initState() {
-    _listenLocation();
+		_initializePage();
     super.initState();
   }
 
   @override
   void dispose() {
     _stopListen();
+		timer?.cancel();
     super.dispose();
   }
 
