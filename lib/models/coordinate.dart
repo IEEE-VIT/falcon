@@ -18,4 +18,11 @@ factory	Coordinate.fromJson(Map<dynamic, dynamic> json) {
 		);
 	}
 
+Map<String, dynamic>toJson(){
+		return <String, dynamic>{
+			'latitude': latitude,
+			'longitude': longitude,
+			'datetime': datetime
+		};
+	}
 }
