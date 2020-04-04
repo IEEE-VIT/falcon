@@ -13,47 +13,47 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-  GoogleMapController mapController;
+    GoogleMapController mapController;
 
-  final Map<String, Marker> markers = {};
+    final Map<String, Marker> markers = {};
 
-  final LatLng _center = LatLng(widget.lattitude, widget.longitude);
+    final LatLng _center = LatLng(widget.lattitude, widget.longitude);
 
-  void _onMapCreated(GoogleMapController controller) {
-
-    setState(() {
-      final locations = [
-        {
-          "name": MarkerId("something"),
-          "lat": 22.19,
-          "lng": 88.54
-        },
-        {
-          "name": MarkerId("sup"),
-          "lat": 23.29,
-          "lng": 88.54
-        },
-        {
-          "name": MarkerId("now"),
-          "lat": 22.19,
-          "lng": 89.94
+    void _onMapCreated(GoogleMapController controller) {
+      mapController = controller;
+      final locations = [ 
+          {
+            "name": "something",
+            "lat": 22.19,
+            "lng": 88.54
+          },
+          {
+            "name": "sup",
+            "lat": 23.29,
+            "lng": 88.54
+          },
+          {
+            "name": "now",
+            "lat": 22.19,
+            "lng": 89.94
+          }
+        ];
+      setState(() {
+        markers.clear();
+        for(final location in locations){
+          final marker = Marker(
+            markerId: MarkerId(location["name"]),
+            position: LatLng(location["lat"], location["lng"])
+          );
+        markers[location["name"]] = marker;
         }
-      ];
-      markers.clear();
-      for(final location in locations){
-        final marker = Marker(
-          markerId: location["name"],
-          position: LatLng(location["lat"], location["lng"])
-        );
-      markers[location["name"]] = marker;
-      }
-    });
-  }
+      });
+    }
     return Scaffold(
       body: GoogleMap(
           onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
-            target: _center,
+            target: const LatLng(0,0),
             zoom: 11.0,
           ),
           markers: markers.values.toSet(),

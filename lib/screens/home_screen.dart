@@ -7,7 +7,6 @@ import 'package:location/location.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:falcon_corona_app/screens/alert_screen.dart';
-import 'package:falcon_corona_app/screens/aok_screen.dart';
 import 'package:falcon_corona_app/screens/warning_screen.dart';
 import 'package:falcon_corona_app/services/databaseService.dart';
 import 'package:falcon_corona_app/models/coordinate.dart';
@@ -23,11 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
 	Timer timer;
   LocationData _location;
   StreamSubscription<LocationData> _locationSubscription;
-<<<<<<< HEAD
   String _error;
 	Database database;
-=======
->>>>>>> history-screen
 
   Future<void> _listenLocation() async {
     _locationSubscription =
