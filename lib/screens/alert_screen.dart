@@ -9,9 +9,13 @@ class AlertScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Center(
-            child: Image(
-              image: AssetImage(
-                'images/doctor-man.png'
+            child: Container(
+              height: 30,
+              width: 40,
+              child: Image(
+                image: AssetImage(
+                  'images/doctor-man.png'
+                ),
               ),
             ),
           ),
