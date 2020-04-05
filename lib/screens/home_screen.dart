@@ -74,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onChageDetection(Event event){
     //print(event.snapshot);
     print("Change detected!");
-    print(event.snapshot);
+    // print(event.snapshot.value);
+    onFirebaseChange(event.snapshot.value);
   }
 
   Future<void> _listenLocation() async {
@@ -124,17 +125,19 @@ class _HomeScreenState extends State<HomeScreen> {
 		return Future.value();
 	}
 
-	void onFirebaseChange() async {
-		dynamic dummyDataList=[
-			{'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:09:41.927760'},
-      {'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:12:56.927608'}, 
-			{'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:14:41.927972'}, 
-		];
+	void onFirebaseChange(dynamic dummyDataList) async {
+    print('inFirebaseChange');
+		// dynamic dummyDataList=[
+		// 	{'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:09:41.927760'},
+    //   {'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:12:56.927608'}, 
+		// 	{'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:14:41.927972'}, 
+		// ];
 		List<Coordinate> coordList=await DatabaseService().getAllCoordinates(database);
 		for(int i=0;i<coordList.length;i++) {
 			for(int j=0;j<dummyDataList.length;j++) {
 				if(dummyDataList[j]['datetime']==coordList[i].datetime && dummyDataList[i]['latitude']==coordList[i].latitude) {
-					print(dummyDataList);
+          print('Match!');
+					print(dummyDataList[i]);
 				}
 			}
 		}
