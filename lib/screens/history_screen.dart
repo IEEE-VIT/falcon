@@ -2,63 +2,104 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HistoryScreen extends StatefulWidget {
-
-  double lattitude = 22.5448;
-  double longitude = 88.3426;
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  List<Marker> allMarkers = [];
+
+  GoogleMapController _controller;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    allMarkers.add(Marker(
+        markerId: MarkerId('myMarker'),
+        draggable: true,
+        onTap: () {
+          print('Marker Tapped');
+        },
+        position: LatLng(41.7128, -74.0060)));
+
+    allMarkers.add(Marker(
+        markerId: MarkerId('sup'),
+        draggable: true,
+        onTap: () {
+          print('Marker Tapped');
+        },
+        position: LatLng(40.7128, -74.0060)));
+
+  }
 
   @override
   Widget build(BuildContext context) {
-    GoogleMapController mapController;
-
-    final Map<MarkerId, Marker> markers = {};
-
-    final LatLng _center = LatLng(widget.lattitude, widget.longitude);
-
-    void _onMapCreated(GoogleMapController controller) {
-      mapController = controller;
-      final locations = [ 
-          {
-            "name": "something",
-            "lat": 22.19,
-            "lng": 88.54
-          },
-          {
-            "name": "sup",
-            "lat": 23.29,
-            "lng": 88.54
-          },
-          {
-            "name": "now",
-            "lat": 22.19,
-            "lng": 89.94
-          }
-        ];
-      setState(() {
-        markers.clear();
-        for(final location in locations){
-          final marker = Marker(
-            markerId: MarkerId(location["name"]),
-            position: LatLng(location["lat"], location["lng"])
-          );
-        markers[MarkerId(location["name"])] = marker;
-        }
-        print(markers);
-      });
-    }
     return Scaffold(
-      body: GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: const LatLng(0,0),
-            zoom: 11.0,
+      appBar: AppBar(
+        title: Text('Maps'),
+      ),
+      body: Stack(
+        children: [Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: GoogleMap(
+            initialCameraPosition:
+                CameraPosition(target: LatLng(40.7128, -74.0060), zoom: 12.0),
+            markers: Set.from(allMarkers),
+            onMapCreated: mapCreated,
           ),
-          markers: markers.values.toSet(),
         ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: InkWell(
+            onTap: movetoBoston,
+            child: Container(
+              height: 40.0,
+              width: 40.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: Colors.green
+              ),
+              child: Icon(Icons.forward, color: Colors.white),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: InkWell(
+            onTap: movetoNewYork,
+            child: Container(
+              height: 40.0,
+              width: 40.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                color: Colors.red
+              ),
+              child: Icon(Icons.backspace, color: Colors.white),
+            ),
+          ),
+        )
+        ]
+      ),
     );
+  }
+
+  void mapCreated(controller) {
+    setState(() {
+      _controller = controller;
+    });
+  }
+
+  movetoBoston() {
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(target: LatLng(42.3601, -71.0589), zoom: 14.0, bearing: 45.0, tilt: 45.0),
+    ));
+  }
+
+  movetoNewYork() {
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(target: LatLng(40.7128, -74.0060), zoom: 12.0),
+    ));
   }
 }

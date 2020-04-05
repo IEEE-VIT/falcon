@@ -5,6 +5,8 @@ import 'package:falcon_corona_app/screens/history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:falcon_corona_app/screens/alert_screen.dart';
 import 'package:falcon_corona_app/screens/warning_screen.dart';
@@ -18,12 +20,58 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final Location location = Location();
+  var childRef;
+  final DBRef=FirebaseDatabase.instance.reference();
 
 	Timer timer;
   LocationData _location;
   StreamSubscription<LocationData> _locationSubscription;
   String _error;
 	Database database;
+
+  void uploadDataToFirebase() async {
+    // DBRef.child("users").set(<dynamic, dynamic>{
+    //       "something": "something"
+    //     });
+    dynamic coordinates=await DatabaseService().getAllRawCoordinates(database);
+    // print(coordinates);
+    dynamic a=List.generate(coordinates.length, (i) {
+      // print(i);
+      // print(coordinates[i]['datetime']);
+			return <dynamic, dynamic>{
+        'latitude': coordinates[i]['latitude'],
+        'longitude': coordinates[i]['longitude'],
+        'datetime': coordinates[i]['datetime'],
+      };
+		});
+    print(coordinates.runtimeType);
+    print(a.runtimeType);
+    // DBRef.child("users")
+    // .set(a);
+    DBRef.child("users").push()
+    .set(a);
+    // for(int i=0; i<a.length;i++) {
+    //   DBRef.child("users").push()
+    //   .set(<dynamic, dynamic>{
+    //         "something": "something"
+    //       });
+    // }
+  }
+
+  void _setUpListener(){
+    // DBRef.child("users").set(<dynamic, dynamic>{
+    //       "something": "something"
+    //     });
+    final childRef=DBRef.child('users').onChildChanged.listen(_onChageDetection);
+    print(childRef);
+    print("Listener Set!");
+  }
+
+  void _onChageDetection(Event event){
+    //print(event.snapshot);
+    print("Change detected!");
+    print(event.snapshot);
+  }
 
   Future<void> _listenLocation() async {
     _locationSubscription =
@@ -39,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _stopListen() async {
     _locationSubscription.cancel();
   }
+
   void onTabTapped(int index) {
    setState(() {
      _currentIndex = index;
@@ -92,7 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
 		// dynamic a=await DatabaseService().getAllCoordinates(database);
 		// print(a);
 		// timer = Timer.periodic(Duration(seconds: 2), (Timer t) => addNewEntry());
-		onFirebaseChange();
+    _setUpListener();
+    // uploadDataToFirebase();
+		// onFirebaseChange();
 	}
 
   @override
@@ -106,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _stopListen();
 		timer?.cancel();
     super.dispose();
+    childRef.cancel();
   }
 
   

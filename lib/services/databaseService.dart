@@ -41,4 +41,9 @@ class DatabaseService {
 			);
 		});
 	}
+
+  Future<dynamic> getAllRawCoordinates(Database database) async {
+		final List<Map<String, dynamic>> coordinates=await database.query('coordinates');
+		return coordinates;
+	}
 }
