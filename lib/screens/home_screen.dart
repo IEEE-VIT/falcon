@@ -89,9 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
 	void _initializePage() async {
 		await _listenLocation();
 		await _initDatabase();
-		//dynamic a=await DatabaseService().getAllCoordinates(database);
-		//print(a);
-		//timer = Timer.periodic(Duration(seconds: 15), (Timer t) => addNewEntry());
+		// dynamic a=await DatabaseService().getAllCoordinates(database);
+		// print(a);
+		// timer = Timer.periodic(Duration(seconds: 2), (Timer t) => addNewEntry());
 		onFirebaseChange();
 	}
 

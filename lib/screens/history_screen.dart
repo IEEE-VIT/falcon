@@ -15,7 +15,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     GoogleMapController mapController;
 
-    final Map<String, Marker> markers = {};
+    final Map<MarkerId, Marker> markers = {};
 
     final LatLng _center = LatLng(widget.lattitude, widget.longitude);
 
@@ -45,8 +45,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
             markerId: MarkerId(location["name"]),
             position: LatLng(location["lat"], location["lng"])
           );
-        markers[location["name"]] = marker;
+        markers[MarkerId(location["name"])] = marker;
         }
+        print(markers);
       });
     }
     return Scaffold(
