@@ -51,6 +51,7 @@ class _WarningScreenState extends State<WarningScreen> {
             ),
             Expanded(
               child: ListView.builder(
+                itemCount: location.length,
                 itemBuilder: (context, index) {
                   return Container(
                     height: 100.0,

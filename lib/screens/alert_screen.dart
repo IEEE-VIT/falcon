@@ -1,6 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:uuid/uuid.dart';
+import 'package:sqflite/sqflite.dart';
 
-class AlertScreen extends StatelessWidget {
+import 'package:falcon_corona_app/services/databaseService.dart';
+
+class AlertScreen extends StatefulWidget {
+  @override
+  _AlertScreenState createState() => _AlertScreenState();
+}
+
+class _AlertScreenState extends State<AlertScreen> {
+
+  Database database;
+
+  var childRef;
+  final DBRef=FirebaseDatabase.instance.reference();
+
+  var uuid = new Uuid();
+
+  void uploadDataToFirebase() async {
+    // DBRef.child("users").set(<dynamic, dynamic>{
+    //       "something": "something"
+    //     });
+    dynamic coordinates=await DatabaseService().getAllRawCoordinates(database);
+    // print(coordinates);
+    dynamic a=List.generate(coordinates.length, (i) {
+      // print(i);
+      // print(coordinates[i]['datetime']);
+			return <dynamic, dynamic>{
+        'latitude': coordinates[i]['latitude'],
+        'longitude': coordinates[i]['longitude'],
+        'datetime': coordinates[i]['datetime'],
+      };
+		});
+    print(coordinates.runtimeType);
+    print(a.runtimeType);
+    // DBRef.child("users")
+    // .set(a);
+    DBRef.child("users").child(uuid.v4())
+    .set(a);
+
+    // for(int i=0; i<a.length;i++) {
+    //   DBRef.child("users").push()
+    //   .set(<dynamic, dynamic>{
+    //         "something": "something"
+    //       });
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
