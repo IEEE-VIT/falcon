@@ -101,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _children = [
     WarningScreen(),
     HistoryScreen(),
+    // AlertScreen(database: database,)
     AlertScreen()
   ];
 
@@ -165,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

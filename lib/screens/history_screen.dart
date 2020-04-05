@@ -36,9 +36,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Maps'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Maps'),
+      // ),
       body: Stack(
         children: [Container(
           height: MediaQuery.of(context).size.height,

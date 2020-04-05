@@ -6,6 +6,13 @@ import 'package:sqflite/sqflite.dart';
 import 'package:falcon_corona_app/services/databaseService.dart';
 
 class AlertScreen extends StatefulWidget {
+
+  
+
+  // AlertScreen({
+  //   @required this.database
+  // });
+
   @override
   _AlertScreenState createState() => _AlertScreenState();
 }
@@ -19,10 +26,11 @@ class _AlertScreenState extends State<AlertScreen> {
 
   var uuid = new Uuid();
 
-  void uploadDataToFirebase() async {
+  Future<void> uploadDataToFirebase() async {
     // DBRef.child("users").set(<dynamic, dynamic>{
     //       "something": "something"
     //     });
+    // dynamic coordinates=await DatabaseService().getAllRawCoordinates(widget.database);
     dynamic coordinates=await DatabaseService().getAllRawCoordinates(database);
     // print(coordinates);
     dynamic a=List.generate(coordinates.length, (i) {
@@ -40,13 +48,30 @@ class _AlertScreenState extends State<AlertScreen> {
     // .set(a);
     DBRef.child("users").child(uuid.v4())
     .set(a);
-
     // for(int i=0; i<a.length;i++) {
     //   DBRef.child("users").push()
     //   .set(<dynamic, dynamic>{
     //         "something": "something"
     //       });
     // }
+    return Future.value();
+  }
+
+  Future<void> _initDatabase() async {
+		print('Initializtion Started!');
+		Database db=await DatabaseService().initDatabase();
+		setState(() {
+				database=db;
+			});
+    // print(await DatabaseService().getAllRawCoordinates(database));
+	}
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // print(widget.database);
+    _initDatabase();
   }
 
   @override
@@ -111,7 +136,8 @@ class _AlertScreenState extends State<AlertScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              onPressed: () {
+              onPressed: () async {
+                await uploadDataToFirebase();
                 Navigator.pushNamed(context, '/aok');
               },
             ),
