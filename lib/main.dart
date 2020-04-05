@@ -1,3 +1,4 @@
+import 'package:falcon_corona_app/screens/aok_screen.dart';
 import 'package:falcon_corona_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/start_screen.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/temperature':(context) => TemperatureScreen(),
         '/inquarantine':(context) => InQuarantineScreen(),
         '/warning':(context) => HomeScreen(),
+        '/aok':(context) => AOKScreen()
       },
       );
   }

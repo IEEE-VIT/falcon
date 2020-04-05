@@ -10,8 +10,8 @@ class AlertScreen extends StatelessWidget {
         children: <Widget>[
           Center(
             child: Container(
-              height: 30,
-              width: 40,
+              height: 120,
+              width: 160,
               child: Image(
                 image: AssetImage(
                   'images/doctor-man.png'
@@ -64,7 +64,7 @@ class AlertScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/temperature');
+                Navigator.pushNamed(context, '/aok');
               },
             ),
           ),
