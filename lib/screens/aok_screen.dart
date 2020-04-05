@@ -5,6 +5,7 @@ class AOKScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         backgroundColor: Colors.white,
         bottomOpacity: 0,
         leading: IconButton(

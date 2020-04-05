@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 import 'package:falcon_corona_app/screens/alert_screen.dart';
 import 'package:falcon_corona_app/screens/warning_screen.dart';
@@ -20,8 +20,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final Location location = Location();
+
   var childRef;
   final DBRef=FirebaseDatabase.instance.reference();
+
+  var uuid = new Uuid();
 
 	Timer timer;
   LocationData _location;
@@ -48,8 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
     print(a.runtimeType);
     // DBRef.child("users")
     // .set(a);
-    DBRef.child("users").push()
+    DBRef.child("users").child(uuid.v4())
     .set(a);
+
     // for(int i=0; i<a.length;i++) {
     //   DBRef.child("users").push()
     //   .set(<dynamic, dynamic>{
@@ -97,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _children = [
     WarningScreen(),
     HistoryScreen(),
+    // AlertScreen(database: database,)
     AlertScreen()
   ];
 
@@ -138,8 +143,6 @@ class _HomeScreenState extends State<HomeScreen> {
 	void _initializePage() async {
 		await _listenLocation();
 		await _initDatabase();
-		// dynamic a=await DatabaseService().getAllCoordinates(database);
-		// print(a);
 		// timer = Timer.periodic(Duration(seconds: 2), (Timer t) => addNewEntry());
     _setUpListener();
     // uploadDataToFirebase();
@@ -163,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
