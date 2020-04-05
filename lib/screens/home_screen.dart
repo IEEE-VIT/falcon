@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
 		Coordinate coordinate=Coordinate(
 				latitude: _location.latitude,
 				longitude: _location.longitude,
-				datetime: DateTime.now().toString()
+//				datetime: DateTime.now().toString()
 		);
 		print(coordinate.toJson());
 		DatabaseService().insertCoordinate(database, coordinate);	
