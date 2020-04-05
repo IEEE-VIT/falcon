@@ -13,6 +13,7 @@ class InQuarantineScreen extends StatefulWidget {
 class _InQuarantineScreenState extends State<InQuarantineScreen> {
   decision selectedDecision;
   bool answer=false;
+  bool _isButtonDisabled=false;
 
   @override
   Widget build(BuildContext context) {
