@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
+enum decision {
+  yes,
+  no,
+}
+
 class InQuarantineScreen extends StatefulWidget {
   @override
   _InQuarantineScreenState createState() => _InQuarantineScreenState();
 }
 
 class _InQuarantineScreenState extends State<InQuarantineScreen> {
-  bool _isButtonDisabled=true;
+  decision selectedDecision;
   bool answer=false;
 
   @override
@@ -45,13 +50,13 @@ class _InQuarantineScreenState extends State<InQuarantineScreen> {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w800,
-                        color: answer ? Color(0xFFFA6400) : Colors.black
+                        color: selectedDecision == decision.yes ? Color(0xFFFA6400) : Colors.black
                       ),
                     ),
                     onPressed: (){
                       setState(() {
                         answer = true;
-                        _isButtonDisabled = false;
+                        selectedDecision = decision.yes;
                       });
                     },
                     shape: RoundedRectangleBorder(
@@ -73,13 +78,13 @@ class _InQuarantineScreenState extends State<InQuarantineScreen> {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w800,
-                        color: answer ? Colors.black : Color(0xFFFA6400)
+                        color: selectedDecision == decision.no ? Color(0xFFFA6400) : Colors.black
                       ),
                     ),
                     onPressed: (){
                       setState(() {
                         answer = false;
-                        _isButtonDisabled = false;
+                        selectedDecision = decision.no;
                       });
                     },
                     shape: RoundedRectangleBorder(
