@@ -40,7 +40,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
       polygonId: PolygonId('test'),
       points: polygonCoords,
       strokeColor: Colors.red,
-      fillColor: Colors.red[300])
+      strokeWidth: 5,
+      fillColor: Colors.red[200])
     );
 
   }
@@ -48,53 +49,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Maps'),
-      // ),
-      body: Stack(
-        children: [Container(
+      body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: GoogleMap(
             initialCameraPosition:
                 CameraPosition(target: LatLng(40.7128, -74.0060), zoom: 12.0),
-            // markers: Set.from(allMarkers),
+            markers: Set.from(allMarkers),
             onMapCreated: mapCreated,
             polygons: polygonSet,
           ),
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: InkWell(
-            onTap: movetoBoston,
-            child: Container(
-              height: 40.0,
-              width: 40.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: Colors.green
-              ),
-              child: Icon(Icons.forward, color: Colors.white),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: InkWell(
-            onTap: movetoNewYork,
-            child: Container(
-              height: 40.0,
-              width: 40.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: Colors.red
-              ),
-              child: Icon(Icons.backspace, color: Colors.white),
-            ),
-          ),
-        )
-        ]
-      ),
     );
   }
 
@@ -104,15 +69,4 @@ class _HistoryScreenState extends State<HistoryScreen> {
     });
   }
 
-  movetoBoston() {
-    _controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: LatLng(42.3601, -71.0589), zoom: 14.0, bearing: 45.0, tilt: 45.0),
-    ));
-  }
-
-  movetoNewYork() {
-    _controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: LatLng(40.7128, -74.0060), zoom: 12.0),
-    ));
-  }
 }
