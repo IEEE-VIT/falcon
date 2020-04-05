@@ -8,6 +8,8 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   List<Marker> allMarkers = [];
+  List<LatLng> polygonCoords = List();
+  Set<Polygon> polygonSet = new Set();
 
   GoogleMapController _controller;
 
@@ -30,6 +32,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
           print('Marker Tapped');
         },
         position: LatLng(40.7128, -74.0060)));
+    polygonCoords.add(LatLng(41.7128, -74.0060));
+    polygonCoords.add(LatLng(42.7128, -74.0060));
+    polygonCoords.add(LatLng(40.7128, -71.0060));
+    polygonCoords.add(LatLng(40.7128, -75.0060));
+    polygonSet.add(Polygon(
+      polygonId: PolygonId('test'),
+      points: polygonCoords,
+      strokeColor: Colors.red,
+      fillColor: Colors.red[300])
+    );
 
   }
 
@@ -46,8 +58,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
           child: GoogleMap(
             initialCameraPosition:
                 CameraPosition(target: LatLng(40.7128, -74.0060), zoom: 12.0),
-            markers: Set.from(allMarkers),
+            // markers: Set.from(allMarkers),
             onMapCreated: mapCreated,
+            polygons: polygonSet,
           ),
         ),
         Align(
