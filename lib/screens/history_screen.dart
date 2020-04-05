@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -7,16 +11,35 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   List<Marker> allMarkers = [];
   List<LatLng> polygonCoords = List();
   Set<Polygon> polygonSet = new Set();
 
   GoogleMapController _controller;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  void _initializePage() async {
+
+    final SharedPreferences prefs = await _prefs;
+
+    dynamic matchedCoords=json.decode(prefs.getString('matchedCoords'));
+    
+    for(int i=0;i<matchedCoords.length;i++) {
+      allMarkers.add(Marker(
+          markerId: MarkerId(matchedCoords[i]['datetime']),
+          draggable: true,
+          onTap: () {
+           print('Marker Tapped');
+          },
+          position: LatLng(matchedCoords[i]['latitude'], matchedCoords[i]['longitude'])
+        )
+      );
+    }
+
+    print(allMarkers);
+
     allMarkers.add(Marker(
         markerId: MarkerId('myMarker'),
         draggable: true,
@@ -32,10 +55,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
           print('Marker Tapped');
         },
         position: LatLng(40.7128, -74.0060)));
-    polygonCoords.add(LatLng(41.7128, -74.0060));
-    polygonCoords.add(LatLng(42.7128, -74.0060));
-    polygonCoords.add(LatLng(40.7128, -71.0060));
-    polygonCoords.add(LatLng(40.7128, -75.0060));
+          polygonCoords.add(LatLng(41.7128, -74.0060));
+          polygonCoords.add(LatLng(42.7128, -74.0060));
+          polygonCoords.add(LatLng(40.7128, -71.0060));
+          polygonCoords.add(LatLng(40.7128, -75.0060));
     polygonSet.add(Polygon(
       polygonId: PolygonId('test'),
       points: polygonCoords,
@@ -43,7 +66,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
       strokeWidth: 5,
       fillColor: Colors.red[200])
     );
+  }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initializePage();
   }
 
   @override

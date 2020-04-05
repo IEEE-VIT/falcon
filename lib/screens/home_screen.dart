@@ -1,4 +1,4 @@
-
+import 'dart:convert';
 import 'dart:async';
 
 import 'package:falcon_corona_app/screens/history_screen.dart';
@@ -7,6 +7,7 @@ import 'package:location/location.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:uuid/uuid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:falcon_corona_app/screens/alert_screen.dart';
 import 'package:falcon_corona_app/screens/warning_screen.dart';
@@ -19,6 +20,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   final Location location = Location();
 
   var childRef;
@@ -127,20 +130,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
 	void onFirebaseChange(dynamic dummyDataList) async {
     print('inFirebaseChange');
+    final SharedPreferences prefs = await _prefs;
 		// dynamic dummyDataList=[
 		// 	{'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:09:41.927760'},
     //   {'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:12:56.927608'}, 
 		// 	{'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:14:41.927972'}, 
 		// ];
+    dynamic matchedCoords=[];
 		List<Coordinate> coordList=await DatabaseService().getAllCoordinates(database);
 		for(int i=0;i<coordList.length;i++) {
 			for(int j=0;j<dummyDataList.length;j++) {
 				if(dummyDataList[j]['datetime']==coordList[i].datetime && dummyDataList[i]['latitude']==coordList[i].latitude) {
           print('Match!');
 					print(dummyDataList[i]);
+          matchedCoords.add(dummyDataList[i]);
 				}
 			}
 		}
+    prefs.setString('matchedCoords', json.encode(matchedCoords));
+    print('Stored Locally!');
 	}
 
 	void _initializePage() async {
