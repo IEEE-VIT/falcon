@@ -28,7 +28,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     
     for(int i=0;i<matchedCoords.length;i++) {
       allMarkers.add(Marker(
-          markerId: MarkerId(matchedCoords[i]['datetime']),
+          markerId: MarkerId(matchedCoords[i]['datetime']==null?"something":matchedCoords[i]['datetime']),
           draggable: true,
           onTap: () {
            print('Marker Tapped');

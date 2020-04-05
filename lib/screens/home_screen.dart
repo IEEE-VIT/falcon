@@ -69,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // DBRef.child("users").set(<dynamic, dynamic>{
     //       "something": "something"
     //     });
-    final childRef=DBRef.child('users').onChildChanged.listen(_onChageDetection);
+    final childRef=DBRef.child('users').onChildAdded.listen(_onChageDetection);
+    // final childRef=DBRef.onChildChanged.listen(_onChageDetection);
     print(childRef);
     print("Listener Set!");
   }
@@ -77,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onChageDetection(Event event){
     //print(event.snapshot);
     print("Change detected!");
-    // print(event.snapshot.value);
+    print(event.snapshot.value);
+    print(event.snapshot);
     onFirebaseChange(event.snapshot.value);
   }
 
@@ -121,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
 		Coordinate coordinate=Coordinate(
 				latitude: _location.latitude,
 				longitude: _location.longitude,
-//				datetime: DateTime.now().toString()
+				datetime: DateTime.now().toString()
 		);
 		print(coordinate.toJson());
 		DatabaseService().insertCoordinate(database, coordinate);	
@@ -154,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
 	void _initializePage() async {
 		await _listenLocation();
 		await _initDatabase();
-		// timer = Timer.periodic(Duration(seconds: 2), (Timer t) => addNewEntry());
+		// timer = Timer.periodic(Duration(seconds: 10), (Timer t) => addNewEntry());
     _setUpListener();
     // uploadDataToFirebase();
 		// onFirebaseChange();
