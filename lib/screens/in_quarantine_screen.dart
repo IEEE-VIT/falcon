@@ -10,6 +10,7 @@ class _InQuarantineScreenState extends State<InQuarantineScreen> {
   bool answer;
   @override
   Widget build(BuildContext context) {
+    bool selected;
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -61,6 +62,8 @@ class _InQuarantineScreenState extends State<InQuarantineScreen> {
                   height: 50.0,
                   width: 130.0,
                   child: OutlineButton(
+                    focusColor: Color(0xFFFA6400),
+                    disabledBorderColor: Colors.white,
                     child: Text(
                       'No',
                       style: TextStyle(
