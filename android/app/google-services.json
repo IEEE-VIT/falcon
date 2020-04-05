@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "624834055881",
+    "firebase_url": "https://falcon-273207.firebaseio.com",
+    "project_id": "falcon-273207",
+    "storage_bucket": "falcon-273207.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624834055881:android:72b40251f93e1ee9d70718",
+        "android_client_info": {
+          "package_name": "com.ieeevit.falcon_corona_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624834055881-dlf6c6i2vmvns0hfaghf5ccvq3lpcrdc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2G7sgozjuDacNO1KTsM_aQifuLx_7t_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624834055881-dlf6c6i2vmvns0hfaghf5ccvq3lpcrdc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
