@@ -6,8 +6,9 @@ class InQuarantineScreen extends StatefulWidget {
 }
 
 class _InQuarantineScreenState extends State<InQuarantineScreen> {
+  bool _isButtonDisabled=true;
+  bool answer=false;
 
-  bool answer;
   @override
   Widget build(BuildContext context) {
     bool selected;
@@ -38,16 +39,19 @@ class _InQuarantineScreenState extends State<InQuarantineScreen> {
                   height: 50.0,
                   width: 130.0,
                   child: OutlineButton(
+                    color: Color(0xFFFA6400),
                     child: Text(
                       'Yes',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w800,
+                        color: answer ? Color(0xFFFA6400) : Colors.black
                       ),
                     ),
                     onPressed: (){
                       setState(() {
                         answer = true;
+                        _isButtonDisabled = false;
                       });
                     },
                     shape: RoundedRectangleBorder(
@@ -63,17 +67,19 @@ class _InQuarantineScreenState extends State<InQuarantineScreen> {
                   width: 130.0,
                   child: OutlineButton(
                     focusColor: Color(0xFFFA6400),
-                    disabledBorderColor: Colors.white,
+                    highlightedBorderColor: Color(0xFFFA6400),
                     child: Text(
                       'No',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w800,
+                        color: answer ? Colors.black : Color(0xFFFA6400)
                       ),
                     ),
                     onPressed: (){
                       setState(() {
                         answer = false;
+                        _isButtonDisabled = false;
                       });
                     },
                     shape: RoundedRectangleBorder(
@@ -105,7 +111,8 @@ class _InQuarantineScreenState extends State<InQuarantineScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              onPressed: () {
+              onPressed:  _isButtonDisabled ? null :
+                  () {
                 Navigator.pushNamed(context, '/warning');
               },
             ),
