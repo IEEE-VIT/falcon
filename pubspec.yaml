@@ -17,6 +17,8 @@ dependencies:
     sdk: flutter
   google_maps_flutter: ^0.5.25+3
   location: ^3.0.2
+  flutter_circular_chart: ^0.1.0
+  flutter_spinkit: ^4.1.2+1
 
   cupertino_icons: ^0.1.2
 

@@ -6,6 +6,7 @@ import 'screens/begin_screen.dart';
 import 'screens/temperature_screen.dart';
 import 'screens/in_quarantine_screen.dart';
 import 'screens/warning_screen.dart';
+import 'screens/stats_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,8 +26,9 @@ class MyApp extends StatelessWidget {
         '/temperature':(context) => TemperatureScreen(),
         '/inquarantine':(context) => InQuarantineScreen(),
         '/warning':(context) => HomeScreen(),
-        '/aok':(context) => AOKScreen()
-      },
+        '/aok':(context) => AOKScreen(),
+        '/stats':(context) => StatsScreen()
+        },
       );
   }
 }

@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:falcon_corona_app/screens/alert_screen.dart';
 import 'package:falcon_corona_app/screens/warning_screen.dart';
+import 'stats_screen.dart';
 import 'package:falcon_corona_app/services/databaseService.dart';
 import 'package:falcon_corona_app/models/coordinate.dart';
 
@@ -106,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     WarningScreen(),
+    StatsScreen(),
     HistoryScreen(),
     // AlertScreen(database: database,)
     AlertScreen()
@@ -188,6 +190,10 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('Warnings'),
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.collections_bookmark),
+            title: Text('Reports'),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.map),
             title: Text('History'),
           ),
@@ -198,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
         currentIndex: _currentIndex,
         selectedItemColor: Color(0xFFFA6400),
+        unselectedItemColor: Color(0xFFFA6400),
         onTap: onTabTapped
       )
     );
