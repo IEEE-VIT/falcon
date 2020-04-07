@@ -1,16 +1,11 @@
-# falcon_corona_app
+# Falcon Tracking & Surveillance
 
-A new Flutter project.
+## Overview
+___
+This app aims to tackle the spread of **COVID-19** by warning users of any past interactons they might have had with an infected patient, thus making users aware of the possiblity that they might have contracted the virus too.
 
-## Getting Started
+Falcon was built using anonymity in mind. Users are asked to sign in anonymously without providing any personal details to keep their identity safe. The app constantly tracks your location and stores it on your device. If an user contracts the virus, they can report this to the app, sending out an alert to everyone else who might have interacted or come close to the infected user. (Your location data is pushed to the cloud if you report yourself to the app.)
 
-This project is a starting point for a Flutter application.
+Along with this, our app displays visual indicators on a map to help you better understand the spread of Corona Virus in your community/locality. It also provides visual *hot zones*, where the spread of Corona Virus has been widespread.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To keep users informed, we also have live statistics about COVID-19 as well as related news and tips.
