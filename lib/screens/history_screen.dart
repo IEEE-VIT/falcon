@@ -108,8 +108,59 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void mapCreated(controller) {
-    setState(() {
+    getDistrictCases().then((casesData) async{
+      for(int i = 0; i<casesData.length; i++){
+        for(int j=0; j<casesData[i].districtData.length; j++){
+          if(casesData[i].districtData[j].district == "Unknown"){
+            continue;
+          } try{
+            final addresses = await Geocoder.local.findAddressesFromQuery(casesData[i].districtData[j].district);
+            var lat = addresses.first.coordinates.latitude;
+            var long = addresses.first.coordinates.longitude;
+            final latlng = LatLng(lat, long);
+            coords.add([latlng, casesData[i].districtData[j].confirmed]);
+          } on PlatformException{
+            continue;
+          }
+        }
+      }
+    });
+    setState(() { 
       _controller = controller;
+      for(int k = 0; k<coords.length; k++){
+        double radius = 0;
+        int color = 0;
+        if(coords[k][1]<50){
+          radius = 25;
+          color = 300;
+        } else if(coords[k][1]<100){
+          radius = 50;
+          color = 400;
+        } else if(coords[k][1]<200){
+          radius = 100;
+          color = 500;
+        } else if(coords[k][1]<300){
+          radius = 200;
+          color = 600;
+        } else if(coords[k][1]<500){
+          radius = 300;
+          color = 700;
+        } else {
+          radius = 500;
+          color = 900;
+        }
+        circles.add(
+          Circle(
+            circleId: CircleId(coords[k][1].toString()),
+            center: coords[k][0],
+            radius: radius,
+            strokeColor: Colors.red,
+            strokeWidth: 5,
+            fillColor: Colors.red[color]
+          )
+        );
+      }
+      print(circles);
     });
   }
 }

@@ -16,7 +16,6 @@ dependencies:
   uuid: ^2.0.4
   shared_preferences: ^0.5.6+3
   google_maps_flutter: ^0.5.25+3
-  location: ^3.0.2
   foreground_service: ^1.1.5
   geolocator: ^5.3.1
 
