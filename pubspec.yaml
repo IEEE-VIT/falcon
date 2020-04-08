@@ -18,6 +18,8 @@ dependencies:
     sdk: flutter
   google_maps_flutter: ^0.5.25+3
   location: ^3.0.2
+  foreground_service: ^1.1.5
+  geolocator: ^5.3.1
 
   cupertino_icons: ^0.1.2
 

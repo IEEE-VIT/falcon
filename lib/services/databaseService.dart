@@ -4,10 +4,14 @@ import 'package:falcon_corona_app/models/coordinate.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+// Database database;
+
 class DatabaseService {
+
 	Future<Database> initDatabase() async {
 		print(await getDatabasesPath());
-		final Future<Database> database=openDatabase(
+		// final Future<Database> _dataBase=
+    Database database=await openDatabase(
 				join(await getDatabasesPath(), 'coordinateDatabase.db'),
 				onCreate: (Database db,int version) async {
 					print('I am here!');
@@ -18,11 +22,22 @@ class DatabaseService {
 				},
 				version: 1,
 		);
+    // database=await _dataBase;
+    print('Okay: $database');
 		print('Database initialized!');
-		return database;
+		// return database;
+    return Future.value(database);
 	}
 
 	Future<void> insertCoordinate(Database database, Coordinate coordinate) async {
+    print('here1');
+    print(database);
+    print('here1');
+    print(coordinate.toJson());
+    if(coordinate.longitude==null && coordinate.longitude==null) {
+      print('Empty!');
+      return;
+    }
 		await database.insert(
 				'coordinates',
 				coordinate.toJson(),
@@ -42,7 +57,7 @@ class DatabaseService {
 		});
 	}
 
-  Future<dynamic> getAllRawCoordinates(Database database) async {
+  Future<dynamic> getAllRawCoordinates(Database database,) async {
 		final List<Map<String, dynamic>> coordinates=await database.query('coordinates');
 		return coordinates;
 	}
