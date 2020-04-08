@@ -30,7 +30,7 @@ class StartScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/begin');
+                  Navigator.pushNamed(context, '/warning');
                 },
               ),
             ),

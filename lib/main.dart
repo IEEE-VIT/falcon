@@ -5,11 +5,25 @@ import 'screens/start_screen.dart';
 import 'screens/begin_screen.dart';
 import 'screens/temperature_screen.dart';
 import 'screens/in_quarantine_screen.dart';
-import 'screens/warning_screen.dart';
+import 'services/shared.dart';
+//import 'screens/warning_screen.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+
+	@override
+	_MyAppState createState()=>_MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+	
+	@override
+	void initState() {
+		super.initState();
+		Shared.initShared();
+	}
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

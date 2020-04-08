@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:uuid/uuid.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:falcon_corona_app/services/databaseService.dart';
+import '../services/shared.dart';
 
 class AlertScreen extends StatefulWidget {
 
@@ -24,9 +24,11 @@ class _AlertScreenState extends State<AlertScreen> {
   var childRef;
   final DBRef=FirebaseDatabase.instance.reference();
 
-  var uuid = new Uuid();
 
   Future<void> uploadDataToFirebase() async {
+    if(Shared.isCaseReported()) {
+      return;
+    }
     // DBRef.child("users").set(<dynamic, dynamic>{
     //       "something": "something"
     //     });
@@ -46,7 +48,7 @@ class _AlertScreenState extends State<AlertScreen> {
     print(a.runtimeType);
     // DBRef.child("users")
     // .set(a);
-    DBRef.child("users").child(uuid.v4())
+    DBRef.child("users").child(Shared.getUuid())
     .set(a);
     // for(int i=0; i<a.length;i++) {
     //   DBRef.child("users").push()
@@ -136,8 +138,14 @@ class _AlertScreenState extends State<AlertScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              onPressed: () async {
+              onPressed: 
+              Shared.isCaseReported()
+              ?
+              null
+              :
+              () async {
                 await uploadDataToFirebase();
+                Shared.setCaseReported();
                 Navigator.pushNamed(context, '/aok');
               },
             ),

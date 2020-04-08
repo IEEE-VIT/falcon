@@ -3,8 +3,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoder/geocoder.dart';
+import '../services/shared.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class HistoryScreen extends StatefulWidget {
 }
 class _HistoryScreenState extends State<HistoryScreen> {
 
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  //Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   List<Marker> allMarkers = [];
   List<LatLng> polygonCoords = List();
@@ -23,9 +23,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void _initializePage() async {
 
-    final SharedPreferences prefs = await _prefs;
+    //final SharedPreferences prefs = await _prefs;
 
-    dynamic matchedCoords=json.decode(prefs.getString('matchedCoords'));
+    //dynamic matchedCoords=json.decode(prefs.getString('matchedCoords'));
+    dynamic matchedCoords=await Shared.getMatchedCoordinates();
     matchedcoords=matchedCoords;
 
     // final coordinates = new Coordinates(matchedCoords[0]['latitude'], matchedCoords[0]['longitude']);
@@ -39,7 +40,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       // dynamic first = addresses.first;
       // print("${first.featureName} : ${first.addressLine}");
       allMarkers.add(Marker(
-          markerId: MarkerId(matchedCoords[i]['datetime']==null?"something":matchedCoords[i]['datetime']),
+          markerId: MarkerId(matchedCoords[i]['datetime']??'something'),
           draggable: true,
           onTap: () {
            print('Marker Tapped');
