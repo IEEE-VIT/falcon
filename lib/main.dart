@@ -1,5 +1,6 @@
 import 'package:falcon_corona_app/screens/aok_screen.dart';
 import 'package:falcon_corona_app/screens/home_screen.dart';
+import 'package:falcon_corona_app/screens/new_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/start_screen.dart';
 import 'screens/begin_screen.dart';
@@ -32,15 +33,16 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
-      routes: {
-        '/':(context) => StartScreen(),
-        '/begin':(context) => BeginScreen(),
-        '/temperature':(context) => TemperatureScreen(),
-        '/inquarantine':(context) => InQuarantineScreen(),
-        '/warning':(context) => HomeScreen(),
-        '/aok':(context) => AOKScreen()
-      },
-      );
+      home: NewsScreen(),
+      // initialRoute: '/',
+      // routes: {
+      //   '/':(context) => StartScreen(),
+      //   '/begin':(context) => BeginScreen(),
+      //   '/temperature':(context) => TemperatureScreen(),
+      //   '/inquarantine':(context) => InQuarantineScreen(),
+      //   '/warning':(context) => HomeScreen(),
+      //   '/aok':(context) => AOKScreen()
+      // },
+    );
   }
 }
