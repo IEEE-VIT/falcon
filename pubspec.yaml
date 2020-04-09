@@ -19,6 +19,8 @@ dependencies:
   location: ^3.0.2
   flutter_circular_chart: ^0.1.0
   flutter_spinkit: ^4.1.2+1
+  webview_flutter: ^0.3.19+9
+  flutter_share: ^1.0.2+1
 
   cupertino_icons: ^0.1.2
 
