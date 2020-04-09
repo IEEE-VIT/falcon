@@ -10,6 +10,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -123,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   int _currentIndex = 0;
   final List<Widget> _children = [
-    WarningScreen(),
+    AOKScreen(),
     HistoryScreen(),
     Shared.isCaseReported()?AOKScreen():AlertScreen(),
   ];
