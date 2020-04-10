@@ -55,22 +55,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
         double radius = 0;
         int color = 0;
         if(coords[k][1]<50){
-          radius = 25;
+          radius = 2500;
           color = 300;
         } else if(coords[k][1]<100){
-          radius = 50;
+          radius = 5000;
           color = 400;
         } else if(coords[k][1]<200){
-          radius = 100;
+          radius = 10000;
           color = 500;
         } else if(coords[k][1]<300){
-          radius = 200;
+          radius = 20000;
           color = 600;
         } else if(coords[k][1]<500){
-          radius = 300;
+          radius = 30000;
           color = 700;
         } else {
-          radius = 500;
+          radius = 50000;
           color = 900;
         }
         circles.add(
@@ -78,13 +78,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
             circleId: CircleId(coords[k][1].toString()),
             center: coords[k][0],
             radius: radius,
-            strokeColor: Colors.red,
+            strokeColor: Colors.red[color],
             strokeWidth: 5,
             fillColor: Colors.red[color]
           )
         );
       }
-      print(circles);
+      print("HEREEEEEEE"+circles.toString());
     });
   }
 
