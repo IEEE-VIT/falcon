@@ -86,32 +86,20 @@ class _NewsScreenState extends State<NewsScreen>{
                         shimmerWidth: MediaQuery.of(context).size.width/1.1,
                         duration: 1000,
                       ),
-                      ShimmerAnimation(
-                        shimmerHeight: MediaQuery.of(context).size.height/3,
-                        shimmerWidth: MediaQuery.of(context).size.width/2.1,
-                        duration: 500,
+                      Row(
+                        children: <Widget>[
+                          ShimmerAnimation(
+                            shimmerHeight: MediaQuery.of(context).size.height/3,
+                            shimmerWidth: MediaQuery.of(context).size.width/2.1,
+                            duration: 500,
+                          ),
+                          ShimmerAnimation(
+                            shimmerHeight: MediaQuery.of(context).size.height/3,
+                            shimmerWidth: MediaQuery.of(context).size.width/2.1,
+                            duration: 500,
+                          ),
+                        ],
                       ),
-                      ShimmerAnimation(
-                        shimmerHeight: MediaQuery.of(context).size.height/3,
-                        shimmerWidth: MediaQuery.of(context).size.width/2.1,
-                        duration: 500,
-                      ),
-                      ShimmerAnimation(
-                        shimmerHeight: MediaQuery.of(context).size.height/3,
-                        shimmerWidth: MediaQuery.of(context).size.width/1.1,
-                        duration: 1000,
-                      ),
-                      ShimmerAnimation(
-                        shimmerHeight: MediaQuery.of(context).size.height/3,
-                        shimmerWidth: MediaQuery.of(context).size.width/2.1,
-                        duration: 500,
-                      ),
-                      ShimmerAnimation(
-                        shimmerHeight: MediaQuery.of(context).size.height/3,
-                        shimmerWidth: MediaQuery.of(context).size.width/2.1,
-                        duration: 500,
-                      ),
-
                     ],
                   );
                 }
@@ -150,16 +138,17 @@ class _NewsScreenState extends State<NewsScreen>{
                           itemCount: snapshot.data.articles.length,
                           itemBuilder: (ctx, index) => 
                           GestureDetector(
-                            onTap: (){Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                              builder: (BuildContext context) => new NewsArticle(
-                                newsURL: snapshot.data.articles[index].url,
-                                newsDescription: snapshot.data.articles[index].description,
-                                newsSource: snapshot.data.articles[index].source.name,
-                                newsTitle: snapshot.data.articles[index].title,
-                              )
-                            ));},
+                            // LINK WEBVIEW CODE HERE PLS
+                            // onTap: (){Navigator.push(
+                            // context,
+                            // new MaterialPageRoute(
+                            //   builder: (BuildContext context) => new NewsArticle(
+                            //     newsURL: snapshot.data.articles[index].url,
+                            //     newsDescription: snapshot.data.articles[index].description,
+                            //     newsSource: snapshot.data.articles[index].source.name,
+                            //     newsTitle: snapshot.data.articles[index].title,
+                            //   )
+                            // ));},
                             child: Container(
                               padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(
@@ -197,7 +186,7 @@ class _NewsScreenState extends State<NewsScreen>{
                                             Text("${(DateTime.now().difference(snapshot.data.articles[index].publishedAt).inHours+1)} hour(s) ago")
                                           ],
                                         )
-                                  ),
+                                      ),
                                     ),
                                 ],
                               ),
