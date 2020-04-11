@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
+import '../services/shared.dart';
 
 class AOKScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-        bottomOpacity: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Color(0xFFFA6400),
+    Widget appBar=Shared.isCaseReported()
+        ?
+        AppBar(
+          backgroundColor: Colors.transparent,
+          leading: Container(),
+          elevation:  0.0,
+        )
+        :
+        AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          bottomOpacity: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Color(0xFFFA6400),
+            ),
+            onPressed:() => Navigator.of(context).pop(),
           ),
-          onPressed:() => Navigator.of(context).pop(),
-        ),
-      ),
+        );
+    return Scaffold(
+      appBar: appBar,
+      //AppBar(
+      //  elevation: 0.0,
+      //  backgroundColor: Colors.white,
+      //  bottomOpacity: 0,
+      //  leading: IconButton(
+      //    icon: Icon(
+      //      Icons.arrow_back,
+      //      color: Color(0xFFFA6400),
+      //    ),
+      //    onPressed:() => Navigator.of(context).pop(),
+      //  ),
+      //),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

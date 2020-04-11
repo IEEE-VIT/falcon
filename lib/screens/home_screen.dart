@@ -1,19 +1,24 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:falcon_corona_app/models/coordinate.dart';
+import 'package:falcon_corona_app/screens/alert_screen.dart';
 import 'package:falcon_corona_app/screens/history_screen.dart';
+import 'package:falcon_corona_app/screens/warning_screen.dart';
+import 'package:falcon_corona_app/services/databaseService.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:uuid/uuid.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:falcon_corona_app/screens/alert_screen.dart';
 import 'package:falcon_corona_app/screens/warning_screen.dart';
 import 'stats_screen.dart';
 import 'package:falcon_corona_app/services/databaseService.dart';
 import 'package:falcon_corona_app/models/coordinate.dart';
+import '../services/shared.dart';
+import 'aok_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,7 +26,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  //Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   final Location location = Location();
 
@@ -109,8 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WarningScreen(),
     StatsScreen(),
     HistoryScreen(),
-    // AlertScreen(database: database,)
-    AlertScreen()
+    Shared.isCaseReported()?AOKScreen():AlertScreen(),
   ];
 
 	Future<void> _initDatabase() async {
@@ -134,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 	void onFirebaseChange(dynamic dummyDataList) async {
     print('inFirebaseChange');
-    final SharedPreferences prefs = await _prefs;
+    //final SharedPreferences prefs = await _prefs;
 		// dynamic dummyDataList=[
 		// 	{'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:09:41.927760'},
     //   {'latitude': 37.4219983, 'longitude': -122.084, 'datetime': '2020-04-04 18:12:56.927608'}, 
@@ -145,13 +149,17 @@ class _HomeScreenState extends State<HomeScreen> {
 		for(int i=0;i<coordList.length;i++) {
 			for(int j=0;j<dummyDataList.length;j++) {
 				if(dummyDataList[j]['datetime']==coordList[i].datetime && dummyDataList[i]['latitude']==coordList[i].latitude) {
-          print('Match!');
-					print(dummyDataList[i]);
+          //print('Match!');
+					//print(dummyDataList[i]);
           matchedCoords.add(dummyDataList[i]);
 				}
 			}
 		}
-    prefs.setString('matchedCoords', json.encode(matchedCoords));
+    //prefs.setString('matchedCoords', json.encode(matchedCoords));
+    print('<__>');
+    print(matchedCoords);
+    Shared.setMatchedCoordinates(json.encode(matchedCoords));
+    print(await Shared.getMatchedCoordinates());
     print('Stored Locally!');
 	}
 
