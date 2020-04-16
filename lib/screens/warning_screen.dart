@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:foreground_service/foreground_service.dart';
-
 import '../services/shared.dart';
+import 'package:geolocator/geolocator.dart';
 
 class WarningScreen extends StatefulWidget {
   @override
@@ -30,16 +30,15 @@ class _WarningScreenState extends State<WarningScreen> {
 
   List<String> closeContact = [
     "Close contact with a person infected with Covid-19",
-    "Close contact with a person infected with Covid-19e",
+    "Close contact with a person infected with Covid-19",
     "Close contact with a person infected with Covid-19",
     "Close contact with a person infected with Covid-19",
     "Close contact with a person infected with Covid-19"
   ];
 
   Future<String> getAddress(latitude, longitude) async {
-    final coordinates = new Coordinates(latitude, longitude);
     dynamic addresses =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+        await Geolocator().placemarkFromCoordinates(latitude, longitude);
     dynamic first = addresses.first;
     //print("${first.featureName} : ${first.addressLine}");
     return first.addressLine;
