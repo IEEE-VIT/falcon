@@ -34,6 +34,10 @@ class Shared {
 	}
 	
 	static Future<dynamic> getMatchedCoordinates() async {
+    if(!prefs.containsKey('matchedCoords')) {
+      print('No coordinates stored!');
+      return Future.value([]);
+    }
 		return Future.value(json.decode(prefs.getString('matchedCoords')));
 	}
 

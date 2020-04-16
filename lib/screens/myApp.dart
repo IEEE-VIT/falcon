@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
 //import '../services/FGS.dart';
 
-import 'dart:async';
-
 // import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 import '../services/databaseService.dart';

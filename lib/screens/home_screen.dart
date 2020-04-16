@@ -9,7 +9,8 @@ import 'package:falcon_corona_app/services/databaseService.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -31,6 +32,23 @@ Future<void> addNewEntry(latitude, longitude) async {
 
 void maybeStartFGS() async {
   print('Starting FGS');
+  // final Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+  _serviceEnabled = await location.serviceEnabled();
+if (!_serviceEnabled) {
+  _serviceEnabled = await location.requestService();
+  if (!_serviceEnabled) {
+    return;
+  }
+}
+
+_permissionGranted = await location.hasPermission();
+if (_permissionGranted == PermissionStatus.denied) {
+  _permissionGranted = await location.requestPermission();
+  if (_permissionGranted != PermissionStatus.granted) {
+    return;
+  }
+}
+  print('Done!');
   if (!(await ForegroundService.foregroundServiceIsStarted())) {
     await ForegroundService.setServiceIntervalSeconds(5);
 
@@ -49,11 +67,21 @@ void maybeStartFGS() async {
   }
 }
 
+Location location = new Location();
+
+bool _serviceEnabled;
+PermissionStatus _permissionGranted;
+LocationData _locationData;
+
 void foregroundServiceFunction() async {
-  print('Here!');
-  Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  debugPrint("The current location is: ${position.latitude}, ${position.longitude}");
+  print('(__)');
+  _locationData = await location.getLocation();
+  print(_locationData);
+  // Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  // print(position);
+  // debugPrint("The current location is: ${position.latitude}, ${position.longitude}");
   // addNewEntry(position.latitude, position.longitude);
+
   ForegroundService.notification.setText("The time was: ${DateTime.now()}");
   }
 
@@ -136,8 +164,8 @@ class _HomeScreenState extends State<HomeScreen> {
 		for(int i=0;i<coordList.length;i++) {
 			for(int j=0;j<dummyDataList.length;j++) {
 				if(dummyDataList[j]['datetime']==coordList[i].datetime && dummyDataList[i]['latitude']==coordList[i].latitude) {
-          //print('Match!');
-					//print(dummyDataList[i]);
+          print('Match!');
+					print(dummyDataList[i]);
           matchedCoords.add(dummyDataList[i]);
 				}
 			}

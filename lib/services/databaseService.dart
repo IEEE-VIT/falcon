@@ -14,7 +14,6 @@ class DatabaseService {
     Database database=await openDatabase(
 				join(await getDatabasesPath(), 'coordinateDatabase.db'),
 				onCreate: (Database db,int version) async {
-					print('I am here!');
 					 await db.execute(
 							'CREATE TABLE coordinates(datetime TEXT, latitude NUMERIC, longitude NUMERIC)'
 					);
@@ -23,16 +22,12 @@ class DatabaseService {
 				version: 1,
 		);
     // database=await _dataBase;
-    print('Okay: $database');
 		print('Database initialized!');
 		// return database;
     return Future.value(database);
 	}
 
 	Future<void> insertCoordinate(Database database, Coordinate coordinate) async {
-    print('here1');
-    print(database);
-    print('here1');
     print(coordinate.toJson());
     if(coordinate.longitude==null && coordinate.longitude==null) {
       print('Empty!');
