@@ -1,17 +1,22 @@
 import 'package:falcon_corona_app/screens/aok_screen.dart';
 import 'package:falcon_corona_app/screens/home_screen.dart';
 import 'package:falcon_corona_app/screens/new_screen.dart';
+import 'package:falcon_corona_app/services/databaseService.dart';
 import 'package:flutter/material.dart';
-import 'screens/start_screen.dart';
+
 import 'screens/begin_screen.dart';
-import 'screens/temperature_screen.dart';
 import 'screens/in_quarantine_screen.dart';
 import 'screens/warning_screen.dart';
 import 'screens/stats_screen.dart';
+import 'screens/myApp.dart';
+import 'screens/start_screen.dart';
+import 'screens/temperature_screen.dart';
+import 'services/databaseService.dart';
 import 'services/shared.dart';
-//import 'screens/warning_screen.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
 
@@ -25,6 +30,7 @@ class _MyAppState extends State<MyApp> {
 	void initState() {
 		super.initState();
 		Shared.initShared();
+    // DatabaseService.initDatabase();
 	}
 
   @override

@@ -3,14 +3,12 @@ import '../../services/NetworkHelper.dart';
 import 'news_article.dart';
 
 class AndroidSecondPage extends StatefulWidget {
-
   @override
   _AndroidSecondPageState createState() => _AndroidSecondPageState();
 }
 
 class _AndroidSecondPageState extends State<AndroidSecondPage> {
-
-  Future <List> getData() async {
+  Future<List> getData() async {
     NetworkHelper covidData = NetworkHelper(
         'http://newsapi.org/v2/top-headlines?country=in&q=corona&sortBy=publishedAt&apiKey=d9fa391aacfe428e81b8c6002ea8a507');
     var covidNews = await covidData.getData();
@@ -25,14 +23,11 @@ class _AndroidSecondPageState extends State<AndroidSecondPage> {
     getData();
   }
 
-  Future<Null> refresh() async{
+  Future<Null> refresh() async {
     await getData();
-    setState(() {
-
-    });
+    setState(() {});
     return null;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,32 +35,34 @@ class _AndroidSecondPageState extends State<AndroidSecondPage> {
       child: Container(
           child: FutureBuilder(
               future: getData(),
-              builder: (BuildContext context, AsyncSnapshot snapshot){
-                if(snapshot.data == null){
-                  return
-                    Container(
-                        child: Center(
-                          child: Text('Loading...'),
-                        )
-                    );
-                }
-                else{
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.data == null) {
+                  return Container(
+                      child: Center(
+                    child: Text('Loading...'),
+                  ));
+                } else {
                   return RefreshIndicator(
                     onRefresh: refresh,
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: snapshot.data.length,
-                        itemBuilder: (BuildContext context, int index){
+                        itemBuilder: (BuildContext context, int index) {
                           return Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: GestureDetector(
                               behavior: HitTestBehavior.translucent,
-                              onTap: (){
+                              onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => NewsArticle(newsURL: snapshot.data[index]['url'],newsSource: snapshot.data[index]['source']['name'],newsTitle: snapshot.data[index]['title'],newsDescription: snapshot.data[index]['description'],),
+                                    builder: (context) => NewsArticle(
+                                      newsURL: snapshot.data[index]['url'],
+                                      newsSource: snapshot.data[index]['source']['name'],
+                                      newsTitle: snapshot.data[index]['title'],
+                                      newsDescription: snapshot.data[index]['description'],
+                                    ),
                                   ),
                                 );
                               },
@@ -104,13 +101,10 @@ class _AndroidSecondPageState extends State<AndroidSecondPage> {
                               ),
                             ),
                           );
-                        }
-                    ),
+                        }),
                   );
                 }
-              }
-          )
-      ),
+              })),
     );
   }
 }

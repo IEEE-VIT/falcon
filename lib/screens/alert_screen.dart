@@ -7,12 +7,6 @@ import '../services/shared.dart';
 
 class AlertScreen extends StatefulWidget {
 
-  
-
-  // AlertScreen({
-  //   @required this.database
-  // });
-
   @override
   _AlertScreenState createState() => _AlertScreenState();
 }
@@ -24,56 +18,30 @@ class _AlertScreenState extends State<AlertScreen> {
   var childRef;
   final DBRef=FirebaseDatabase.instance.reference();
 
-
   Future<void> uploadDataToFirebase() async {
+    Database database=await DatabaseService().initDatabase();
     if(Shared.isCaseReported()) {
       return;
     }
-    // DBRef.child("users").set(<dynamic, dynamic>{
-    //       "something": "something"
-    //     });
     // dynamic coordinates=await DatabaseService().getAllRawCoordinates(widget.database);
     dynamic coordinates=await DatabaseService().getAllRawCoordinates(database);
-    // print(coordinates);
     dynamic a=List.generate(coordinates.length, (i) {
-      // print(i);
-      // print(coordinates[i]['datetime']);
 			return <dynamic, dynamic>{
         'latitude': coordinates[i]['latitude'],
         'longitude': coordinates[i]['longitude'],
         'datetime': coordinates[i]['datetime'],
       };
 		});
-    print(coordinates.runtimeType);
-    print(a.runtimeType);
-    // DBRef.child("users")
-    // .set(a);
     DBRef.child("users").child(Shared.getUuid())
     .set(a);
-    // for(int i=0; i<a.length;i++) {
-    //   DBRef.child("users").push()
-    //   .set(<dynamic, dynamic>{
-    //         "something": "something"
-    //       });
-    // }
     return Future.value();
   }
 
-  Future<void> _initDatabase() async {
-		print('Initializtion Started!');
-		Database db=await DatabaseService().initDatabase();
-		setState(() {
-				database=db;
-			});
-    // print(await DatabaseService().getAllRawCoordinates(database));
-	}
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // print(widget.database);
-    _initDatabase();
   }
 
   @override

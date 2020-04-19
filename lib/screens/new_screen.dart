@@ -138,17 +138,6 @@ class _NewsScreenState extends State<NewsScreen>{
                           itemCount: snapshot.data.articles.length,
                           itemBuilder: (ctx, index) => 
                           GestureDetector(
-                            // LINK WEBVIEW CODE HERE PLS
-                            // onTap: (){Navigator.push(
-                            // context,
-                            // new MaterialPageRoute(
-                            //   builder: (BuildContext context) => new NewsArticle(
-                            //     newsURL: snapshot.data.articles[index].url,
-                            //     newsDescription: snapshot.data.articles[index].description,
-                            //     newsSource: snapshot.data.articles[index].source.name,
-                            //     newsTitle: snapshot.data.articles[index].title,
-                            //   )
-                            // ));},
                             child: Container(
                               padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(

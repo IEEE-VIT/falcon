@@ -47,9 +47,9 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
     List<CircularStackEntry> data = <CircularStackEntry>[
       new CircularStackEntry(
         <CircularSegmentEntry>[
-          new CircularSegmentEntry(deaths.toDouble(), Colors.red, rankKey: 'Q1'),
-          new CircularSegmentEntry(recovered.toDouble(), Colors.green, rankKey: 'Q2'),
-          new CircularSegmentEntry(confirmed.toDouble(), Colors.blue, rankKey: 'Q3'),
+          new CircularSegmentEntry(deaths.toDouble(), Color(0xFFAE4500), rankKey: 'Q1'),
+          new CircularSegmentEntry(recovered.toDouble(), Color(0xFFFF9148), rankKey: 'Q2'),
+          new CircularSegmentEntry(confirmed.toDouble(), Color(0xFFFA6400), rankKey: 'Q3'),
         ],
         rankKey: 'Quarterly Profits',
       ),
@@ -87,13 +87,13 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
           ),
           Row(
             children: <Widget>[
-              Card(text: 'Recovered',value: '${recovered.toString()}',colour: Colors.green,),
-              Card(text: 'Deaths',value: '${deaths.toString()}',colour: Colors.red,)
+              Card(text: 'Recovered',value: '${recovered.toString()}',colour: Color(0xFFFF9148),),
+              Card(text: 'Deaths',value: '${deaths.toString()}',colour: Color(0xFFAE4500),)
             ],
           ),
           Row(
             children: <Widget>[
-              Card(text: 'Confirmed',value: '${confirmed.toString()}',colour: Colors.blue,),
+              Card(text: 'Confirmed',value: '${confirmed.toString()}',colour: Color(0xFFFA6400),),
               Card(text: 'Total cases',value: '${totalCases.toString()}',colour: Colors.grey,)
             ],
           )
