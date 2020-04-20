@@ -182,18 +182,14 @@ class _WarningScreenState extends State<WarningScreen> {
   }
 
   void _initializePage() async {
-//    showSnackbar(
-//        context: context,
-//        content: 'Last Updated at 24/05/2020 at 00:00',
-//        label: 'Refresh',
-//        labelPressAction: () {
-//          print('Update all locations again!');
-//        });
     _busy=true;
     matchedcoords = await Shared.getMatchedCoordinates();
     print(matchedcoords.length);
     dynamic lastcoords;
     if (matchedcoords.length == 0) {
+      setState(() {
+        _busy=false;
+      });
       return;
     }
     String address = await getAddress(

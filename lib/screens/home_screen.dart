@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/coordinate.dart';
@@ -49,15 +50,21 @@ void foregroundServiceFunction() async {
   print(position);
   debugPrint(
       "The current location is: ${position.latitude}, ${position.longitude}");
-  //addNewEntry(position.latitude, position.longitude);
+  addNewEntry(position.latitude, position.longitude);
 
   ForegroundService.notification.setText("The time was: ${DateTime.now()}");
 }
 
 void maybeStartFGS() async {
   print('Starting FGS');
-  final Geolocator geolocator = Geolocator()
-    ..forceAndroidLocationManager = true;
+  //final Geolocator geolocator = Geolocator()
+  // ..forceAndroidLocationManager = true;
+  GeolocationStatus geolocationStatus  = await Geolocator().checkGeolocationPermissionStatus();
+  print(geolocationStatus);
+  if((geolocationStatus==GeolocationStatus.denied || geolocationStatus==GeolocationStatus.disabled)) {
+    print('Location permission not given! Asking for permission');
+    await Permission.locationWhenInUse.request();
+  }
 //    _serviceEnabled = await location.serviceEnabled();
 //  if (!_serviceEnabled) {
 //    _serviceEnabled = await location.requestService();
