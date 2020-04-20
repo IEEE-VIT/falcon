@@ -3,8 +3,6 @@ import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'stats-pages/android_screen1.dart';
 import 'stats-pages/android_screen2.dart';
-import 'stats-pages/ios_screen1.dart';
-import 'stats-pages/ios_screen2.dart';
 import 'new_screen.dart';
 
 
