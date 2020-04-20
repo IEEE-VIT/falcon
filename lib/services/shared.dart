@@ -88,6 +88,9 @@ class Shared {
     double radius=0;
     int color=0;
     List<dynamic> citiesData=json.decode(prefs.getString('affectedCitiesCircles'));
+    if(citiesData==null) {
+      citiesData=[];
+    }
     for(int i=0;i<citiesData.length;i++) {
       if (citiesData[i]['confirmed'] < 50) {
         radius = 2500;
