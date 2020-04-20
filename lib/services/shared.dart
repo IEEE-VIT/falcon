@@ -30,7 +30,24 @@ class Shared {
 	}
 
 	static Future<void> setMatchedCoordinates(dynamic coords) async {
-		return prefs.setString('matchedCoords', coords);
+    List<dynamic> previousMatchedCoords=await getMatchedCoordinates();
+    if(previousMatchedCoords==null) {
+      previousMatchedCoords=[];
+    }
+   List<dynamic> newList;
+   if(previousMatchedCoords.isNotEmpty && coords.isNotEmpty) {
+     newList=[...previousMatchedCoords, ...coords];
+   }
+   if(previousMatchedCoords.isEmpty && coords.isEmpty) {
+     newList=[];
+   }
+   if(previousMatchedCoords.isEmpty) {
+     newList=[...coords];
+   }
+   if(coords.isEmpty) {
+     newList=[...previousMatchedCoords];
+   }
+		return prefs.setString('matchedCoords', json.encode(newList));
 	}
 	
 	static Future<dynamic> getMatchedCoordinates() async {
@@ -39,6 +56,7 @@ class Shared {
       return Future.value([]);
     }
 		return Future.value(json.decode(prefs.getString('matchedCoords')));
+    //return Future.value();
 	}
 
   static Future<bool> setCaseReported() async {
@@ -53,5 +71,8 @@ class Shared {
 
   static getUuid() {
     return prefs.getString('uuid');
+  }
+
+  static storeAffectedCities() {
   }
 }

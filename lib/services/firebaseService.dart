@@ -52,7 +52,8 @@ class FirebaseService {
         }
       }
     }
-    Shared.setMatchedCoordinates(json.encode(matchedCoords));
+    print(matchedCoords);
+    Shared.setMatchedCoordinates(matchedCoords);
     print('Stored Locally!');
   
   }

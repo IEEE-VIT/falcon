@@ -5,7 +5,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 
@@ -50,7 +49,7 @@ void foregroundServiceFunction() async {
   print(position);
   debugPrint(
       "The current location is: ${position.latitude}, ${position.longitude}");
-  addNewEntry(position.latitude, position.longitude);
+  //addNewEntry(position.latitude, position.longitude);
 
   ForegroundService.notification.setText("The time was: ${DateTime.now()}");
 }

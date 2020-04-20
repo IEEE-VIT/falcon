@@ -13,6 +13,7 @@ import 'screens/begin_screen.dart';
 import 'screens/in_quarantine_screen.dart';
 import 'screens/start_screen.dart';
 import 'screens/stats_screen.dart';
+import 'screens/warning_screen.dart';
 import 'screens/temperature_screen.dart';
 import 'services/shared.dart';
 import 'services/firebaseService.dart';
@@ -22,14 +23,12 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-
-	@override
-	_MyAppState createState()=>_MyAppState();
+  @override
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-	
-	@override
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -40,21 +39,21 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/':(context) => StartScreen(),
-        '/begin':(context) => BeginScreen(),
-        '/temperature':(context) => TemperatureScreen(),
-        '/inquarantine':(context) => InQuarantineScreen(),
-        '/warning':(context) => HomeScreen(),
-        '/aok':(context) => AOKScreen(),
-        '/stats':(context) => StatsScreen()
-        },
-      );
+        '/begin': (context) => BeginScreen(),
+        '/temperature': (context) => TemperatureScreen(),
+        '/inquarantine': (context) => InQuarantineScreen(),
+        '/warning': (context) => HomeScreen(),
+        '/aok': (context) => AOKScreen(),
+        '/stats': (context) => StatsScreen()
+      },
+    );
   }
 
   @override
-	void initState() {
-		super.initState();
-		Shared.initShared();
+  void initState() {
+    super.initState();
+    Shared.initShared();
     // DatabaseService.initDatabase();
     FirebaseService.initFirebaseService();
-	}
+  }
 }

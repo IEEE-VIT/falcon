@@ -4,6 +4,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../services/shared.dart';
+//import '../widgets/snackBar.dart';
 import 'home_screen.dart';
 
 class WarningScreen extends StatefulWidget {
@@ -13,6 +14,8 @@ class WarningScreen extends StatefulWidget {
 
 class _WarningScreenState extends State<WarningScreen> {
   List<dynamic> matchedcoords, finalLocations = [];
+
+  bool _busy=false;
 
   List<String> place = [
     "Truffles Cafe",
@@ -45,7 +48,6 @@ class _WarningScreenState extends State<WarningScreen> {
         onPressed: () async {
           final fgsIsRunning =
               await ForegroundService.foregroundServiceIsStarted();
-          print(fgsIsRunning);
           if (fgsIsRunning) {
             await ForegroundService.stopForegroundService();
             print('Foreground process stopped');
@@ -60,7 +62,16 @@ class _WarningScreenState extends State<WarningScreen> {
             child: Icon(Icons.stop)),
         backgroundColor: Colors.red,
       ),
-      body: SafeArea(
+      body: 
+      _busy
+      ?
+      Container(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      )
+      :
+      SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,6 +183,14 @@ class _WarningScreenState extends State<WarningScreen> {
   }
 
   void _initializePage() async {
+//    showSnackbar(
+//        context: context,
+//        content: 'Last Updated at 24/05/2020 at 00:00',
+//        label: 'Refresh',
+//        labelPressAction: () {
+//          print('Update all locations again!');
+//        });
+    _busy=true;
     matchedcoords = await Shared.getMatchedCoordinates();
     print(matchedcoords.length);
     dynamic lastcoords;
@@ -203,6 +222,8 @@ class _WarningScreenState extends State<WarningScreen> {
         'latitude': matchedcoords[i]['latitude']
       });
     }
-    setState(() {});
+    setState(() {
+      _busy=false;
+    });
   }
 }
