@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home_screen.dart';
 
 class StartScreen extends StatelessWidget {
   @override
@@ -30,6 +31,7 @@ class StartScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 onPressed: () {
+                  //Navigator.pushNamed(context, '/begin');
                   Navigator.pushNamed(context, '/warning');
                 },
               ),
