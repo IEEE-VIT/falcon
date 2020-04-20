@@ -81,24 +81,33 @@ class _NewsScreenState extends State<NewsScreen>{
                           ),
                         )
                       ),
-                      ShimmerAnimation(
-                        shimmerHeight: MediaQuery.of(context).size.height/3,
-                        shimmerWidth: MediaQuery.of(context).size.width/1.1,
-                        duration: 1000,
+                      Expanded(
+                        child: ShimmerAnimation(
+                          shimmerHeight: MediaQuery.of(context).size.height/3,
+                          shimmerWidth: MediaQuery.of(context).size.width/1.1,
+                          duration: 1000,
+                        ),
                       ),
-                      Row(
-                        children: <Widget>[
-                          ShimmerAnimation(
-                            shimmerHeight: MediaQuery.of(context).size.height/3,
-                            shimmerWidth: MediaQuery.of(context).size.width/2.1,
-                            duration: 500,
+                      SizedBox(height: 10),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: <Widget>[
+                              ShimmerAnimation(
+                                shimmerHeight: MediaQuery.of(context).size.height/3,
+                                shimmerWidth: MediaQuery.of(context).size.width/2.1,
+                                duration: 500,
+                              ),
+                              SizedBox(width: 10),
+                              ShimmerAnimation(
+                                shimmerHeight: MediaQuery.of(context).size.height/3,
+                                shimmerWidth: MediaQuery.of(context).size.width/2.1,
+                                duration: 500,
+                              ),
+                            ],
                           ),
-                          ShimmerAnimation(
-                            shimmerHeight: MediaQuery.of(context).size.height/3,
-                            shimmerWidth: MediaQuery.of(context).size.width/2.1,
-                            duration: 500,
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   );

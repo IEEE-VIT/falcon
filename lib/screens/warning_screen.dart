@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../services/shared.dart';

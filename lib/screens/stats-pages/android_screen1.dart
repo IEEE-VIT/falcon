@@ -25,13 +25,15 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
     var globalData = await covidData.getData();
     print(globalData["India"].reversed.toList()[0]);
 
+    if(this.mounted){
     setState(() {
-    recovered = globalData["India"].reversed.toList()[0]["recovered"];
-    deaths = globalData["India"].reversed.toList()[0]["deaths"];
-    confirmed = globalData["India"].reversed.toList()[0]["confirmed"];
-    totalCases = recovered + deaths + confirmed;
-    valueReceived = true;
-    });
+      recovered = globalData["India"].reversed.toList()[0]["recovered"];
+      deaths = globalData["India"].reversed.toList()[0]["deaths"];
+      confirmed = globalData["India"].reversed.toList()[0]["confirmed"];
+      totalCases = recovered + deaths + confirmed;
+      valueReceived = true;
+      });
+    }
   }
 
   @override
@@ -39,6 +41,7 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
     super.initState();
     getData();
   }
+
 
 
   @override

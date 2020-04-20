@@ -91,7 +91,7 @@ class _StatsScreenState extends State<StatsScreen> {
                   ),
                 ),
                 body: TabBarView(
-                  children: <Widget>[AndroidFirstPage(), AndroidSecondPage()],
+                  children: <Widget>[AndroidFirstPage(), NewsScreen()],
                 )),
           ));
     }
