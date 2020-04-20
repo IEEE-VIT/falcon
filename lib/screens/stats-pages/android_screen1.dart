@@ -15,9 +15,13 @@ class AndroidFirstPage extends StatefulWidget {
 
 class _AndroidFirstPageState extends State<AndroidFirstPage> {
   int totalCases = 0;
+  int prevTotalCases = 0;
   int deaths = 0;
   int recovered = 0;
   int confirmed = 0;
+  int prevDayDeaths = 0;
+  int prevDayRecovered = 0;
+  int prevDayConfirmed = 0;
   bool valueReceived = false;
   String deathPercentage = "0.0";
   String recoveredPercentage = "0.0";
@@ -34,7 +38,11 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
         recovered = globalData["India"].reversed.toList()[0]["recovered"];
         deaths = globalData["India"].reversed.toList()[0]["deaths"];
         confirmed = globalData["India"].reversed.toList()[0]["confirmed"];
+        prevDayRecovered = globalData["India"].reversed.toList()[1]["recovered"];
+        prevDayDeaths = globalData["India"].reversed.toList()[1]["deaths"];
+        prevDayConfirmed = globalData["India"].reversed.toList()[1]["confirmed"];
         totalCases = recovered + deaths + confirmed;
+        prevTotalCases = prevDayRecovered + prevDayDeaths + prevDayConfirmed;
         deathPercentage = ((deaths / totalCases) * 100).toStringAsFixed(2);
         recoveredPercentage = ((recovered / totalCases) * 100).toStringAsFixed(2);
         confirmedPercentage = ((confirmed / totalCases) * 100).toStringAsFixed(2);
@@ -85,9 +93,9 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
           ),
           valueReceived
               ? Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width,
-                child: Stack(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width,
+                  child: Stack(
                     children: <Widget>[
                       AnimatedCircularChart(
                         key: _chartKey,
@@ -103,9 +111,7 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
                               'Death $deathPercentage%',
-                              style: TextStyle(
-                                color: Color(0xFFAE4500)
-                              ),
+                              style: TextStyle(color: Color(0xFFAE4500)),
                             ),
                           ),
                           decoration: BoxDecoration(
@@ -122,9 +128,7 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
                               'Recovered $recoveredPercentage%',
-                              style: TextStyle(
-                                  color: Color(0xFFFF9148)
-                              ),
+                              style: TextStyle(color: Color(0xFFFF9148)),
                             ),
                           ),
                           decoration: BoxDecoration(
@@ -140,9 +144,7 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
                               'Confirmed $confirmedPercentage%',
-                              style: TextStyle(
-                                  color: Color(0xFFFA6400)
-                              ),
+                              style: TextStyle(color: Color(0xFFFA6400)),
                             ),
                           ),
                           decoration: BoxDecoration(
@@ -153,7 +155,7 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
                       ),
                     ],
                   ),
-              )
+                )
               : SpinKitRotatingCircle(
                   color: Colors.white,
                   size: 50.0,
@@ -162,12 +164,16 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
             children: <Widget>[
               Card(
                 text: 'Confirmed',
-                value: '${confirmed.toString()}',
+                value: confirmed > prevDayConfirmed
+                    ? '${confirmed.toString()}(+${confirmed - prevDayConfirmed})'
+                    : '${confirmed.toString()}(-${prevDayConfirmed - confirmed})',
                 colour: Color(0xFFFA6400),
               ),
               Card(
                 text: 'Total Cases',
-                value: '${totalCases.toString()}',
+                value: totalCases > prevTotalCases
+                    ? '${totalCases.toString()}(+${totalCases - prevTotalCases})'
+                    : '${totalCases.toString()}(-${prevTotalCases - totalCases})',
                 colour: Colors.grey[400],
               )
             ],
@@ -176,12 +182,16 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
             children: <Widget>[
               Card(
                 text: 'Recovered',
-                value: '${recovered.toString()}',
+                value: recovered > prevDayRecovered
+                    ? '${recovered.toString()}(+${recovered - prevDayRecovered})'
+                    : '${recovered.toString()}(-${prevDayRecovered - recovered})',
                 colour: Color(0xFFFF9148),
               ),
               Card(
                 text: 'Deaths',
-                value: '${deaths.toString()}',
+                value: deaths > prevDayDeaths
+                    ? '${deaths.toString()}(+${deaths - prevDayDeaths})'
+                    : '${deaths.toString()}(-${prevDayDeaths - deaths})',
                 colour: Color(0xFFAE4500),
               )
             ],
