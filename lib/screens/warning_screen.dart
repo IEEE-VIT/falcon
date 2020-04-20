@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:foreground_service/foreground_service.dart';
 import '../services/shared.dart';
@@ -37,6 +38,11 @@ class _WarningScreenState extends State<WarningScreen> {
   ];
 
   Future<String> getAddress(latitude, longitude) async {
+    //  final coordinates = new Coordinates(latitude, longitude);
+    // //  dynamic addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    //  dynamic first = addresses.first;
+    //  //print("${first.featureName} : ${first.addressLine}");
+    //  return first.addressLine;
     dynamic addresses =
         await Geolocator().placemarkFromCoordinates(latitude, longitude);
     dynamic first = addresses.first;
