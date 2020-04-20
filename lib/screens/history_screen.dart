@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import '../services/shared.dart';
+import '../widgets/snackBar.dart';
 import 'package:http/http.dart' as http;
 
 class HistoryScreen extends StatefulWidget {
@@ -90,6 +91,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void _initializePage() async {
+    showSnackbar(
+      context: context,
+      content: 'Last Updated at 24/05/2020 at 00:00',
+      label: 'Refresh',
+      labelPressAction: () {
+        print('Update all locations again!');
+      }
+    );
 
     //final SharedPreferences prefs = await _prefs;
 
@@ -128,7 +137,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         )
       );
     }
-
   }
 
   @override

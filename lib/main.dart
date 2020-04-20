@@ -1,18 +1,21 @@
+/*
+   1.Reposiveness in news and charts section.
+   2.Caching in city fetch of map.
+   3.Radius of circles in map.
+   4.Make the location compare logic.
+   5.Onboarding screens.
+*/
 import 'package:falcon_corona_app/screens/aok_screen.dart';
 import 'package:falcon_corona_app/screens/home_screen.dart';
-import 'package:falcon_corona_app/screens/new_screen.dart';
-import 'package:falcon_corona_app/services/databaseService.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/begin_screen.dart';
 import 'screens/in_quarantine_screen.dart';
-import 'screens/warning_screen.dart';
-import 'screens/stats_screen.dart';
-import 'screens/myApp.dart';
 import 'screens/start_screen.dart';
+import 'screens/stats_screen.dart';
 import 'screens/temperature_screen.dart';
-import 'services/databaseService.dart';
 import 'services/shared.dart';
+import 'services/firebaseService.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,13 +30,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 	
 	@override
-	void initState() {
-		super.initState();
-		Shared.initShared();
-    // DatabaseService.initDatabase();
-	}
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -53,4 +49,12 @@ class _MyAppState extends State<MyApp> {
         },
       );
   }
+
+  @override
+	void initState() {
+		super.initState();
+		Shared.initShared();
+    // DatabaseService.initDatabase();
+    FirebaseService.initFirebaseService();
+	}
 }

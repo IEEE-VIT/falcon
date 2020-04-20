@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:falcon_corona_app/services/databaseService.dart';
+import '../services/firebaseService.dart';
 import '../services/shared.dart';
 
 class AlertScreen extends StatefulWidget {
@@ -20,9 +21,9 @@ class _AlertScreenState extends State<AlertScreen> {
 
   Future<void> uploadDataToFirebase() async {
     Database database=await DatabaseService().initDatabase();
-    if(Shared.isCaseReported()) {
-      return;
-    }
+   // if(Shared.isCaseReported()) {
+   //   return;
+   // }
     // dynamic coordinates=await DatabaseService().getAllRawCoordinates(widget.database);
     dynamic coordinates=await DatabaseService().getAllRawCoordinates(database);
     dynamic a=List.generate(coordinates.length, (i) {
@@ -112,7 +113,8 @@ class _AlertScreenState extends State<AlertScreen> {
               null
               :
               () async {
-                await uploadDataToFirebase();
+                //await uploadDataToFirebase();
+                await FirebaseService.uploadDataToFirebase();
                 Shared.setCaseReported();
                 Navigator.pushNamed(context, '/aok');
               },

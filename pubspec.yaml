@@ -24,7 +24,7 @@ dependencies:
   flutter_share: ^1.0.2+1
   flutter_spinkit: ^4.1.2
   shimmer: ^1.1.1
-  foreground_service: ^1.1.5
+  foreground_service: ^2.0.0
   geolocator: ^5.3.1
   cupertino_icons: ^0.1.2
   location: ^3.0.2
