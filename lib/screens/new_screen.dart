@@ -147,6 +147,14 @@ class _NewsScreenState extends State<NewsScreen>{
                           itemCount: snapshot.data.articles.length,
                           itemBuilder: (ctx, index) => 
                           GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NewsArticle(newsURL: snapshot.data.articles[index].url,newsSource: snapshot.data.articles[index].source.name,newsTitle: snapshot.data.articles[index].title,newsDescription: snapshot.data.articles[index].description,),
+                                ),
+                              );
+                            },
                             child: Container(
                               padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(

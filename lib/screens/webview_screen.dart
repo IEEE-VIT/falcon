@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -38,6 +37,7 @@ class _NewsArticleState extends State<NewsArticle> {
     return Scaffold(
       appBar: AppBar(
         title:  Text('${widget.newsSource}'),
+        backgroundColor: Color(0xFFFA6400),
         actions: <Widget>[
           NavigationControls(_controller.future),
         ],
