@@ -30,35 +30,6 @@ Future<void> addNewEntry(latitude, longitude) async {
 }
 
 
-void maybeStartFGS() async {
-  print('Starting FGS');
-  if (!(await ForegroundService.foregroundServiceIsStarted())) {
-    await ForegroundService.setServiceIntervalSeconds(5);
-
-    //necessity of editMode is dubious (see function comments)
-    await ForegroundService.notification.startEditMode();
-
-    await ForegroundService.notification
-        .setTitle("Example Title: ${DateTime.now()}");
-    await ForegroundService.notification
-        .setText("Example Text: ${DateTime.now()}");
-
-    await ForegroundService.notification.finishEditMode();
-
-    await ForegroundService.startForegroundService(foregroundServiceFunction);
-    await ForegroundService.getWakeLock();
-  }
-}
-
-void foregroundServiceFunction() async {
-  print('Here!');
-  Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  debugPrint("The current location is: ${position.latitude}, ${position.longitude}");
-  // addNewEntry(position.latitude, position.longitude);
-  ForegroundService.notification.setText("The time was: ${DateTime.now()}");
-  }
-
-
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -155,7 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
 	void _initializePage() async {
 		//await _listenLocation();
 		// timer = Timer.periodic(Duration(seconds: 10), (Timer t) => addNewEntry());
-    maybeStartFGS();
     await _initDatabase();
     _setUpListener();
 	}
