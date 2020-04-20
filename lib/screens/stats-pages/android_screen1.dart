@@ -42,8 +42,6 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
     getData();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -59,10 +57,11 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
     ];
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 20.0),
             child: Align(
               alignment: Alignment.bottomLeft,
@@ -76,32 +75,32 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
               ),
             ),
           ),
-          Center(
-            child: valueReceived ? AnimatedCircularChart(
-              key: _chartKey,
-              size: const Size(400.0, 400.0),
-              initialChartData: data,
-              chartType: CircularChartType.Radial,
-            ) :
-            SpinKitRotatingCircle(
-              color: Colors.white,
-              size: 50.0,
-            )
-          ),
+          valueReceived ? AnimatedCircularChart(
+                key: _chartKey,
+                size: Size(MediaQuery.of(context).size.width/1.5, MediaQuery.of(context).size.height/2.2),
+                initialChartData: data,
+                chartType: CircularChartType.Radial,
+              ) :
+              SpinKitRotatingCircle(
+                color: Colors.white,
+                size: 50.0,
+              ),
+
           Row(
-            children: <Widget>[
-              Card(text: 'Recovered',value: '${recovered.toString()}',colour: Color(0xFFFF9148),),
-              Card(text: 'Deaths',value: '${deaths.toString()}',colour: Color(0xFFAE4500),)
-            ],
-          ),
+              children: <Widget>[
+                Card(text: 'Confirmed',value: '${confirmed.toString()}',colour: Color(0xFFFA6400),),
+                Card(text: 'Total Cases',value: '${totalCases.toString()}',colour: Colors.grey[400],)
+              ],
+            ),
           Row(
-            children: <Widget>[
-              Card(text: 'Confirmed',value: '${confirmed.toString()}',colour: Color(0xFFFA6400),),
-              Card(text: 'Total cases',value: '${totalCases.toString()}',colour: Colors.grey,)
-            ],
-          )
-        ],
-      ),
+              children: <Widget>[
+                Card(text: 'Recovered',value: '${recovered.toString()}',colour: Color(0xFFFF9148),),
+                Card(text: 'Deaths',value: '${deaths.toString()}',colour: Color(0xFFAE4500),)
+              ],
+            ),
+          ],
+        ),
+      )
     );
   }
 }
@@ -127,20 +126,28 @@ class Card extends StatelessWidget {
         height: 100.0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 17.0,
-                color: Colors.white
+            Padding(
+              padding:  EdgeInsets.only(left: 12.0),
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 15.0,
+                  color: Colors.white
+                ),
               ),
             ),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 17.0,
-                color: Colors.white
-              )
+            Padding(
+              padding:  EdgeInsets.only(left: 12.0),
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold
+                )
+              ),
             ),
           ],
         ),

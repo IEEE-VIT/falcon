@@ -10,7 +10,7 @@ import 'package:shimmer/shimmer.dart';
 const url = "http://newsapi.org/v2/top-headlines?q=corona&sortBy=publishedAt&language=en&apiKey=0fa3ff9e6c2b4a7e93c2ccc823fd3e8b";
 
 
-Future<NewsModel> newsArticles;
+Future<NewsModel> newsArticles ;
 
 Future<NewsModel> getNews() async{
   final response = await http.get(url);
@@ -29,14 +29,14 @@ class ShimmerAnimation extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return Shimmer.fromColors(
 			period: Duration(milliseconds: duration),
-			baseColor: Colors.grey[500],
+			baseColor: Colors.grey[300],
 			highlightColor: Colors.white,
 			child: Container(
 				width: shimmerWidth,
 				height: shimmerHeight,
 				decoration: BoxDecoration(
 					color: Colors.black,
-					borderRadius: BorderRadius.circular(10)
+					borderRadius: BorderRadius.circular(15)
 				),
 			),
 		);
@@ -93,16 +93,17 @@ class _NewsScreenState extends State<NewsScreen>{
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               ShimmerAnimation(
                                 shimmerHeight: MediaQuery.of(context).size.height/3,
-                                shimmerWidth: MediaQuery.of(context).size.width/2.1,
+                                shimmerWidth: MediaQuery.of(context).size.width/2.5,
                                 duration: 500,
                               ),
                               SizedBox(width: 10),
                               ShimmerAnimation(
                                 shimmerHeight: MediaQuery.of(context).size.height/3,
-                                shimmerWidth: MediaQuery.of(context).size.width/2.1,
+                                shimmerWidth: MediaQuery.of(context).size.width/2.5,
                                 duration: 500,
                               ),
                             ],
@@ -132,7 +133,6 @@ class _NewsScreenState extends State<NewsScreen>{
                        child: StaggeredGridView.countBuilder(
                           shrinkWrap: true,
                           staggeredTileBuilder: (int index) {
-                            print(index);
                             if(index==0){
                               return StaggeredTile.count(4, 3);
                             }
@@ -163,7 +163,7 @@ class _NewsScreenState extends State<NewsScreen>{
                                           ),
                                         ),
                                       ),
-                                      placeholder: (context, url) => SpinKitWave(color: Colors.orange),
+                                      placeholder: (context, url) => SpinKitFadingCircle(color: Colors.orange[300]),
                                       errorWidget: (context, url, error) => Icon(Icons.error),
                                     ),
                                   ),
