@@ -72,7 +72,7 @@ class _NewsScreenState extends State<NewsScreen>{
                         alignment: Alignment.topLeft,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(16.0, 10, 0, 9),
-                          child: Text("Today's Top Healdines", 
+                          child: Text("Today's Top Headlines", 
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 25,
@@ -120,7 +120,7 @@ class _NewsScreenState extends State<NewsScreen>{
                         alignment: Alignment.topLeft,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(16.0, 10, 0, 9),
-                          child: Text("Today's Top Healdines", 
+                          child: Text("Today's Top Headlines", 
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 25,
