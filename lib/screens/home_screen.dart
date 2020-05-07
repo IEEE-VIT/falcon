@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:tutorial_coach_mark/animated_focus_light.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
@@ -13,6 +15,7 @@ import '../models/coordinate.dart';
 import '../services/databaseService.dart';
 import '../services/firebaseService.dart';
 import '../services/shared.dart';
+import '../services/sharedKeys.dart';
 import 'alert_screen.dart';
 import 'aok_screen.dart';
 import 'history_screen.dart';
@@ -59,9 +62,11 @@ void maybeStartFGS() async {
   print('Starting FGS');
   //final Geolocator geolocator = Geolocator()
   // ..forceAndroidLocationManager = true;
-  GeolocationStatus geolocationStatus  = await Geolocator().checkGeolocationPermissionStatus();
+  GeolocationStatus geolocationStatus =
+      await Geolocator().checkGeolocationPermissionStatus();
   print(geolocationStatus);
-  if((geolocationStatus==GeolocationStatus.denied || geolocationStatus==GeolocationStatus.disabled)) {
+  if ((geolocationStatus == GeolocationStatus.denied ||
+      geolocationStatus == GeolocationStatus.disabled)) {
     print('Location permission not given! Asking for permission');
     await Permission.locationWhenInUse.request();
   }
@@ -104,6 +109,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Database database;
 
+  List<TargetFocus> targets = List();
+
   int _currentIndex = 0;
 
   final List<Widget> _children = [
@@ -114,26 +121,38 @@ class _HomeScreenState extends State<HomeScreen> {
     //AlertScreen(),
   ];
 
+  // GlobalKey keyButton = GlobalKey();
+  // GlobalKey keyButton2 = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: _children[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
+            items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.warning),
                 title: Text('Warnings'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.collections_bookmark),
+                icon: Icon(
+                  Icons.collections_bookmark,
+                  key: SharedKeys.keyButton1,
+                ),
                 title: Text('Reports'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.map),
+                icon: Icon(
+                  Icons.map,
+                  key: SharedKeys.keyButton2,
+                ),
                 title: Text('History'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.add_alert),
+                icon: Icon(
+                  Icons.add_alert,
+                  key: SharedKeys.keyButton3,
+                ),
                 title: Text('Alert'),
               ),
             ],
@@ -215,10 +234,162 @@ class _HomeScreenState extends State<HomeScreen> {
     return Future.value();
   }
 
+  void showTutorial() {
+    TutorialCoachMark(context,
+        targets: targets,
+        colorShadow: Colors.red,
+        textSkip: "SKIP",
+        paddingFocus: 10,
+        opacityShadow: 0.8, finish: () {
+      print("finish");
+    }, clickTarget: (target) {
+      print(target);
+    }, clickSkip: () {
+      print("skip");
+    })
+      ..show();
+  }
+
+  void _afterLayout(_) {
+    Future.delayed(Duration(milliseconds: 100), () {
+      showTutorial();
+    });
+  }
+
+  void initTargets() {
+    targets.add(TargetFocus(
+      identify: "Target 1",
+      keyTarget: SharedKeys.keyButton,
+      contents: [
+        ContentTarget(
+            align: AlignContent.top,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Start/Stop location tracking",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.Circle,
+    ));
+    targets.add(TargetFocus(
+      identify: "Target 2",
+      keyTarget: SharedKeys.keyButton1,
+      contents: [
+        ContentTarget(
+            align: AlignContent.top,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Gain all round covid updates from trustful sources",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.Circle,
+    ));
+    targets.add(TargetFocus(
+      identify: "Target 3",
+      keyTarget: SharedKeys.keyButton2,
+      contents: [
+        ContentTarget(
+            align: AlignContent.top,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Check data with the help of map",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.Circle,
+    ));
+    targets.add(TargetFocus(
+      identify: "Target 4",
+      keyTarget: SharedKeys.keyButton3,
+      contents: [
+        ContentTarget(
+            align: AlignContent.top,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Report your case",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.Circle,
+    ));
+  }
+
   void _initializePage() async {
     //await _listenLocation();
     // timer = Timer.periodic(Duration(seconds: 10), (Timer t) => addNewEntry());
     maybeStartFGS();
+    initTargets();
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     await _initDatabase();
     //_setUpListener();
     FirebaseService.setUpListener();

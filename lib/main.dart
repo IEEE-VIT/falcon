@@ -8,15 +8,17 @@
 import 'package:falcon_corona_app/screens/aok_screen.dart';
 import 'package:falcon_corona_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/begin_screen.dart';
 import 'screens/in_quarantine_screen.dart';
+import 'screens/onBoarding/onBoardingScreen.dart';
+import 'screens/onBoarding/tutorial.dart';
 import 'screens/start_screen.dart';
 import 'screens/stats_screen.dart';
-import 'screens/warning_screen.dart';
 import 'screens/temperature_screen.dart';
-import 'services/shared.dart';
 import 'services/firebaseService.dart';
+import 'services/shared.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,7 +40,8 @@ class _MyAppState extends State<MyApp> {
       ),
       initialRoute: '/',
       routes: {
-        '/':(context) => StartScreen(),
+        '/': (context) => Shared.showIntro()?OnBoardingScreen() : HomeScreen(),
+        //'/':(context) => StartScreen(),
         '/begin': (context) => BeginScreen(),
         '/temperature': (context) => TemperatureScreen(),
         '/inquarantine': (context) => InQuarantineScreen(),
@@ -52,8 +55,15 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
+    //prefs = await SharedPreferences.getInstance();
     Shared.initShared();
     // DatabaseService.initDatabase();
+    _initializePage();
+  }
+
+  void _initializePage() async {
+    await Shared.initShared();
     FirebaseService.initFirebaseService();
   }
 }

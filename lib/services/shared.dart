@@ -34,6 +34,18 @@ class Shared {
 		return Future.value();
 	}
 
+  static  bool showIntro() {
+   // if(prefs==null) {
+   //   return false;
+   // }
+    if(!prefs.containsKey('showIntro')) {
+      prefs.setBool('showIntro', false);
+      return true;
+    } else {
+      return prefs.getBool('showBool');
+    }
+  }
+
 	static Future<void> setMatchedCoordinates(dynamic coords) async {
     List<dynamic> previousMatchedCoords=await getMatchedCoordinates();
     if(previousMatchedCoords==null) {

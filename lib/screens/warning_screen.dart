@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:tutorial_coach_mark/animated_focus_light.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../services/shared.dart';
+import '../services/sharedKeys.dart';
 //import '../widgets/snackBar.dart';
 import 'home_screen.dart';
 
 class WarningScreen extends StatefulWidget {
+
   @override
   _WarningScreenState createState() => _WarningScreenState();
 }
 
 class _WarningScreenState extends State<WarningScreen> {
   List<dynamic> matchedcoords, finalLocations = [];
+
+  List<TargetFocus> targets = List();
+
+  //GlobalKey keyButton = GlobalKey();
+  //GlobalKey keyButton1 = GlobalKey();
 
   bool _busy=false;
 
@@ -56,6 +65,7 @@ class _WarningScreenState extends State<WarningScreen> {
           }
         },
         child: Tooltip(
+            key: SharedKeys.keyButton,
             showDuration: Duration(),
             message: 'Stop Collecting Location Data',
             child: Icon(Icons.stop)),
@@ -175,14 +185,103 @@ class _WarningScreenState extends State<WarningScreen> {
     return first.thoroughfare+', '+first.locality+', '+first.administrativeArea+', '+first.subAdministrativeArea;
   }
 
+  void showTutorial() {
+    TutorialCoachMark(context,
+        targets: targets,
+        colorShadow: Colors.red,
+        textSkip: "SKIP",
+        paddingFocus: 10,
+        opacityShadow: 0.8, finish: () {
+      print("finish");
+    }, clickTarget: (target) {
+      print(target);
+    }, clickSkip: () {
+      print("skip");
+    })
+      ..show();
+  }
+
   @override
   void initState() {
     super.initState();
     _initializePage();
   }
 
+  void _afterLayout(_) {
+    Future.delayed(Duration(milliseconds: 100), () {
+      showTutorial();
+    });
+  }
+
+ // void initTargets() {
+ //   targets.add(TargetFocus(
+ //     identify: "Target 1",
+ //     keyTarget: keyButton,
+ //     contents: [
+ //       ContentTarget(
+ //           align: AlignContent.top,
+ //           child: Container(
+ //             child: Column(
+ //               mainAxisSize: MainAxisSize.min,
+ //               crossAxisAlignment: CrossAxisAlignment.start,
+ //               children: <Widget>[
+ //                 Text(
+ //                   "Start/Stop location tracking",
+ //                   style: TextStyle(
+ //                       fontWeight: FontWeight.bold,
+ //                       color: Colors.white,
+ //                       fontSize: 20.0),
+ //                 ),
+ //                 Padding(
+ //                   padding: const EdgeInsets.only(top: 10.0),
+ //                   child: Text(
+ //                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+ //                     style: TextStyle(color: Colors.white),
+ //                   ),
+ //                 )
+ //               ],
+ //             ),
+ //           ))
+ //     ],
+ //     shape: ShapeLightFocus.Circle,
+ //   ));
+ //   targets.add(TargetFocus(
+ //     identify: "Target 2",
+ //     keyTarget: keyButton1,
+ //     contents: [
+ //       ContentTarget(
+ //           align: AlignContent.top,
+ //           child: Container(
+ //             child: Column(
+ //               mainAxisSize: MainAxisSize.min,
+ //               crossAxisAlignment: CrossAxisAlignment.start,
+ //               children: <Widget>[
+ //                 Text(
+ //                   "Gain all round covid updates from trustful sources",
+ //                   style: TextStyle(
+ //                       fontWeight: FontWeight.bold,
+ //                       color: Colors.white,
+ //                       fontSize: 20.0),
+ //                 ),
+ //                 Padding(
+ //                   padding: const EdgeInsets.only(top: 10.0),
+ //                   child: Text(
+ //                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+ //                     style: TextStyle(color: Colors.white),
+ //                   ),
+ //                 )
+ //               ],
+ //             ),
+ //           ))
+ //     ],
+ //     shape: ShapeLightFocus.Circle,
+ //   ));
+ // }
+
   void _initializePage() async {
     _busy=true;
+   // initTargets();
+   // WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     matchedcoords = await Shared.getMatchedCoordinates();
     print(matchedcoords.length);
     dynamic lastcoords;
