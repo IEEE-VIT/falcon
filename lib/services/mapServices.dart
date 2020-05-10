@@ -74,8 +74,9 @@ class MapService {
         context: context,
         content: 'Last Updated at ${Shared.getLastUpdatedStamp()['date']} at ${Shared.getLastUpdatedStamp()['time']}',
         label: 'Refresh',
-        labelPressAction: () {
+        labelPressAction: () async {
           print('Update all locations again!');
+          circles=await MapService.buildMapCircles(context: context);
         });
     }
     return Future.value(circles);

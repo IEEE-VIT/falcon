@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:tutorial_coach_mark/animated_focus_light.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:falcon_corona_app/services/databaseService.dart';
 import '../services/firebaseService.dart';
@@ -39,10 +41,70 @@ class _AlertScreenState extends State<AlertScreen> {
   }
 
 
-  @override
+  List<TargetFocus> targets = List();
+
+  GlobalKey keyButton1 = GlobalKey();
+
+  void initTargets() {
+    targets.add(TargetFocus(
+      identify: "Target 1",
+      keyTarget: keyButton1,
+      contents: [
+        ContentTarget(
+            align: AlignContent.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "If you are infected, help others by clicking this button!",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.RRect,
+    ));
+  }
+
+
+  void showTutorial() {
+    TutorialCoachMark(context,
+        targets: targets,
+        colorShadow: Colors.red,
+        textSkip: "SKIP",
+        paddingFocus: 10,
+        opacityShadow: 0.8, finish: () {
+    }, clickTarget: (target) {
+    }, clickSkip: () {
+    })
+      ..show();
+  }
+
+  void _afterLayout(_) {
+    if (Shared.showReportTutorial()) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        showTutorial();
+      });
+    }
+  }
+
   void initState() {
-    // TODO: implement initState
     super.initState();
+    initTargets();
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
   }
 
   @override
@@ -95,6 +157,7 @@ class _AlertScreenState extends State<AlertScreen> {
             width: 281.0,
             height: 49.0,
             child: RaisedButton(
+              key: keyButton1,
               child: Text(
                 'Report Case',
                 style: TextStyle(

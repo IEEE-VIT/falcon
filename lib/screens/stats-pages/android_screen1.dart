@@ -27,7 +27,12 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
   String recoveredPercentage = "0.0";
   String confirmedPercentage = "0.0";
 
+  bool busy = true;
+
   void getData() async {
+    setState(() {
+      busy = true;
+    });
     NetworkHelper covidData =
         NetworkHelper('https://pomber.github.io/covid19/timeseries.json');
     var globalData = await covidData.getData();
@@ -38,17 +43,24 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
         recovered = globalData["India"].reversed.toList()[0]["recovered"];
         deaths = globalData["India"].reversed.toList()[0]["deaths"];
         confirmed = globalData["India"].reversed.toList()[0]["confirmed"];
-        prevDayRecovered = globalData["India"].reversed.toList()[1]["recovered"];
+        prevDayRecovered =
+            globalData["India"].reversed.toList()[1]["recovered"];
         prevDayDeaths = globalData["India"].reversed.toList()[1]["deaths"];
-        prevDayConfirmed = globalData["India"].reversed.toList()[1]["confirmed"];
+        prevDayConfirmed =
+            globalData["India"].reversed.toList()[1]["confirmed"];
         totalCases = recovered + deaths + confirmed;
         prevTotalCases = prevDayRecovered + prevDayDeaths + prevDayConfirmed;
         deathPercentage = ((deaths / totalCases) * 100).toStringAsFixed(2);
-        recoveredPercentage = ((recovered / totalCases) * 100).toStringAsFixed(2);
-        confirmedPercentage = ((confirmed / totalCases) * 100).toStringAsFixed(2);
+        recoveredPercentage =
+            ((recovered / totalCases) * 100).toStringAsFixed(2);
+        confirmedPercentage =
+            ((confirmed / totalCases) * 100).toStringAsFixed(2);
         valueReceived = true;
       });
     }
+    setState(() {
+      busy = false;
+    });
   }
 
   @override
@@ -74,131 +86,144 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
     ];
 
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0, left: 20.0),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                'Todays Report',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
-          ),
-          valueReceived
-              ? Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: <Widget>[
-                      AnimatedCircularChart(
-                        key: _chartKey,
-                        size: Size(MediaQuery.of(context).size.width / 1.5,
-                            MediaQuery.of(context).size.height / 2.2),
-                        initialChartData: data,
-                        chartType: CircularChartType.Radial,
+        body: busy
+            ? Container(
+                child: Center(
+                  child: CircularProgressIndicator(
+                      // backgroundColor: Color(0xFFFBD7BF),
+                      // valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFBD7BF)),
                       ),
-                      Positioned(
-                        top: 40,
-                        child: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              'Death $deathPercentage%',
-                              style: TextStyle(color: Color(0xFFAE4500)),
-                            ),
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Color(0xFFEAD0BF),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 40,
-                        left: MediaQuery.of(context).size.width * 0.3,
-                        child: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              'Recovered $recoveredPercentage%',
-                              style: TextStyle(color: Color(0xFFFF9148)),
-                            ),
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Color(0xFFFBD7BF),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 30,
-                        child: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              'Confirmed $confirmedPercentage%',
-                              style: TextStyle(color: Color(0xFFFA6400)),
-                            ),
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Color(0xFFFCE3D1),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : SpinKitRotatingCircle(
-                  color: Colors.white,
-                  size: 50.0,
                 ),
-          Row(
-            children: <Widget>[
-              Card(
-                text: 'Confirmed',
-                value: confirmed > prevDayConfirmed
-                    ? '${confirmed.toString()}(+${confirmed - prevDayConfirmed})'
-                    : '${confirmed.toString()}(-${prevDayConfirmed - confirmed})',
-                colour: Color(0xFFFA6400),
-              ),
-              Card(
-                text: 'Total Cases',
-                value: totalCases > prevTotalCases
-                    ? '${totalCases.toString()}(+${totalCases - prevTotalCases})'
-                    : '${totalCases.toString()}(-${prevTotalCases - totalCases})',
-                colour: Colors.grey[400],
               )
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              Card(
-                text: 'Recovered',
-                value: recovered > prevDayRecovered
-                    ? '${recovered.toString()}(+${recovered - prevDayRecovered})'
-                    : '${recovered.toString()}(-${prevDayRecovered - recovered})',
-                colour: Color(0xFFFF9148),
-              ),
-              Card(
-                text: 'Deaths',
-                value: deaths > prevDayDeaths
-                    ? '${deaths.toString()}(+${deaths - prevDayDeaths})'
-                    : '${deaths.toString()}(-${prevDayDeaths - deaths})',
-                colour: Color(0xFFAE4500),
-              )
-            ],
-          ),
-        ],
-      ),
-    ));
+            : SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0, left: 20.0),
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          'Todays Report',
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    valueReceived
+                        ? Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width,
+                            child: Stack(
+                              children: <Widget>[
+                                AnimatedCircularChart(
+                                  key: _chartKey,
+                                  size: Size(
+                                      MediaQuery.of(context).size.width / 1.5,
+                                      MediaQuery.of(context).size.height / 2.2),
+                                  initialChartData: data,
+                                  chartType: CircularChartType.Radial,
+                                ),
+                                Positioned(
+                                  top: 40,
+                                  child: Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                        'Death $deathPercentage%',
+                                        style:
+                                            TextStyle(color: Color(0xFFAE4500)),
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Color(0xFFEAD0BF),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 40,
+                                  left: MediaQuery.of(context).size.width * 0.3,
+                                  child: Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                        'Recovered $recoveredPercentage%',
+                                        style:
+                                            TextStyle(color: Color(0xFFFF9148)),
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Color(0xFFFBD7BF),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 30,
+                                  child: Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                        'Confirmed $confirmedPercentage%',
+                                        style:
+                                            TextStyle(color: Color(0xFFFA6400)),
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Color(0xFFFCE3D1),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : SpinKitRotatingCircle(
+                            color: Colors.white,
+                            size: 50.0,
+                          ),
+                    Row(
+                      children: <Widget>[
+                        Card(
+                          text: 'Confirmed',
+                          value: confirmed > prevDayConfirmed
+                              ? '${confirmed.toString()}(+${confirmed - prevDayConfirmed})'
+                              : '${confirmed.toString()}(-${prevDayConfirmed - confirmed})',
+                          colour: Color(0xFFFA6400),
+                        ),
+                        Card(
+                          text: 'Total Cases',
+                          value: totalCases > prevTotalCases
+                              ? '${totalCases.toString()}(+${totalCases - prevTotalCases})'
+                              : '${totalCases.toString()}(-${prevTotalCases - totalCases})',
+                          colour: Colors.grey[400],
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Card(
+                          text: 'Recovered',
+                          value: recovered > prevDayRecovered
+                              ? '${recovered.toString()}(+${recovered - prevDayRecovered})'
+                              : '${recovered.toString()}(-${prevDayRecovered - recovered})',
+                          colour: Color(0xFFFF9148),
+                        ),
+                        Card(
+                          text: 'Deaths',
+                          value: deaths > prevDayDeaths
+                              ? '${deaths.toString()}(+${deaths - prevDayDeaths})'
+                              : '${deaths.toString()}(-${prevDayDeaths - deaths})',
+                          colour: Color(0xFFAE4500),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ));
   }
 }
 
@@ -231,11 +256,14 @@ class Card extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(left: 12.0),
-              child: Text(value,
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold)),
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),

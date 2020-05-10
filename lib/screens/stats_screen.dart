@@ -1,10 +1,13 @@
-import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
-import 'package:flutter/cupertino.dart';
-import 'stats-pages/android_screen1.dart';
-import 'stats-pages/android_screen2.dart';
-import 'new_screen.dart';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:tutorial_coach_mark/animated_focus_light.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+
+import '../services/shared.dart';
+import 'new_screen.dart';
+import 'stats-pages/android_screen1.dart';
 
 
 class StatsScreen extends StatefulWidget {
@@ -14,7 +17,13 @@ class StatsScreen extends StatefulWidget {
 
 class _StatsScreenState extends State<StatsScreen> {
   bool isIos = Platform.isIOS;
+
   int _selectedIndexValue = 0;
+
+  List<TargetFocus> targets = List();
+
+  GlobalKey keyButton1 = GlobalKey();
+  GlobalKey keyButton2 = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -79,10 +88,12 @@ class _StatsScreenState extends State<StatsScreen> {
                     labelColor: Color(0xFFFA6400),
                     tabs: <Widget>[
                       Tab(
+                        key: keyButton1,
                         text: "Statistics",
 
                       ),
                       Tab(
+                        key: keyButton2,
                         text: "News",
                       )
                     ],
@@ -92,6 +103,99 @@ class _StatsScreenState extends State<StatsScreen> {
                   children: <Widget>[AndroidFirstPage(), NewsScreen()],
                 )),
           ));
+    }
+  }
+
+
+  void initState() {
+    super.initState();
+    initTargets();
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+  }
+
+  void initTargets() {
+    targets.add(TargetFocus(
+      identify: "Target 1",
+      keyTarget: keyButton1,
+      contents: [
+        ContentTarget(
+            align: AlignContent.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Get the latest statistics",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.RRect,
+    ));
+    targets.add(TargetFocus(
+      identify: "Target 2",
+      keyTarget: keyButton2,
+      contents: [
+        ContentTarget(
+            align: AlignContent.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Get the latest news",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.RRect,
+    ));
+  }
+
+  void showTutorial() {
+    TutorialCoachMark(context,
+        targets: targets,
+        colorShadow: Colors.red,
+        textSkip: "SKIP",
+        paddingFocus: 10,
+        opacityShadow: 0.8, finish: () {
+    }, clickTarget: (target) {
+    }, clickSkip: () {
+    })
+      ..show();
+  }
+
+  void _afterLayout(_) {
+    if (Shared.showStatsTutorial()) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        showTutorial();
+      });
     }
   }
 }

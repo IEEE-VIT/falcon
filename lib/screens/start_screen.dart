@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/shared.dart';
 
 class StartScreen extends StatelessWidget {
   @override
@@ -20,9 +21,7 @@ class StartScreen extends StatelessWidget {
               child: RaisedButton(
                 child: Text(
                   'Continue',
-                  style: TextStyle(
-                      fontSize: 18.0
-                  ),
+                  style: TextStyle(fontSize: 18.0),
                 ),
                 color: Colors.black45,
                 textColor: Colors.white,
@@ -31,7 +30,9 @@ class StartScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   //Navigator.pushNamed(context, '/begin');
-                  Navigator.pushNamed(context, '/warning');
+                  Shared.showIntro()
+                      ? Navigator.pushReplacementNamed(context, '/onBoarding')
+                      : Navigator.pushReplacementNamed(context, '/warning');
                 },
               ),
             ),

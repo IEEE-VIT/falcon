@@ -28,7 +28,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   location: ^3.0.2
   permission_handler: ^5.0.0+hotfix.3
-  fancy_on_boarding: ^1.5.0
+  fancy_on_boarding: ^1.6.0
   tutorial_coach_mark: ^0.3.0
 
 dev_dependencies:

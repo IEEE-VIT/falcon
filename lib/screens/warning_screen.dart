@@ -11,6 +11,12 @@ import 'home_screen.dart';
 
 class WarningScreen extends StatefulWidget {
 
+  WarningScreen({
+    @required this.showTutorial,
+  });
+
+  final Function showTutorial;
+
   @override
   _WarningScreenState createState() => _WarningScreenState();
 }
@@ -87,9 +93,22 @@ class _WarningScreenState extends State<WarningScreen> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(15.0),
-              child: Text(
-                'Warnings',
-                style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.w900),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Warnings',
+                    style: TextStyle(fontSize: 34.0, fontWeight: FontWeight.w900),
+                  ),
+                  IconButton(
+                    key: SharedKeys.keyButton4,
+                    onPressed: () {
+                      Shared.resetTutorial();
+                      widget.showTutorial();
+                    },
+                    icon: Icon(Icons.refresh),
+                  ),
+                ],
               ),
             ),
             Expanded(
@@ -279,7 +298,9 @@ class _WarningScreenState extends State<WarningScreen> {
  // }
 
   void _initializePage() async {
-    _busy=true;
+    setState(() {
+      _busy=true;
+    });
    // initTargets();
    // WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     matchedcoords = await Shared.getMatchedCoordinates();

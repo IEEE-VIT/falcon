@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:tutorial_coach_mark/animated_focus_light.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
-import '../services/shared.dart';
-import '../services/sharedKeys.dart';
 import '../services/mapServices.dart';
+import '../services/shared.dart';
 import '../widgets/snackBar.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -24,33 +25,45 @@ class _HistoryScreenState extends State<HistoryScreen> {
   dynamic matchedcoords;
   final coords = [];
   LatLng initialPosition;
-  bool _busy = false;
+  bool busy = true;
 
   GoogleMapController _controller;
+
+  List<TargetFocus> targets = List();
+
+  GlobalKey keyButton1 = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-      _busy
-      ?
-      Container(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      )
-      :
-      Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: GoogleMap(
-          initialCameraPosition:
-              CameraPosition(target: LatLng(21.000, 72.00), zoom: 2.0),
-          markers: Set.from(allMarkers),
-          onMapCreated: mapCreated,
-          circles: circles,
-        ),
-      ),
+      body: busy
+          ? Container(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Container(
+                      margin: EdgeInsets.all(30.0),
+                      child: Text(
+                          'Please wait while we fetch the latest data for you'),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: GoogleMap(
+                initialCameraPosition:
+                    CameraPosition(target: LatLng(21.000, 72.00), zoom: 2.0),
+                markers: Set.from(allMarkers),
+                onMapCreated: mapCreated,
+                circles: circles,
+              ),
+            ),
     );
   }
 
@@ -64,16 +77,64 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initializePage();
+    initTargets();
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     //_addCircles();
+  }
+
+  void initTargets() {
+    targets.add(TargetFocus(
+      identify: "Target 1",
+      keyTarget: keyButton1,
+      contents: [
+        ContentTarget(
+            align: AlignContent.top,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Refresh map data with the help of this button",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.RRect,
+    ));
   }
 
   void mapCreated(GoogleMapController controller) {
     setState(() {
       _controller = controller;
     });
+  }
+
+  void showTutorial() {
+    TutorialCoachMark(context,
+        targets: targets,
+        colorShadow: Colors.red,
+        textSkip: "SKIP",
+        paddingFocus: 10,
+        opacityShadow: 0.8,
+        finish: () {},
+        clickTarget: (target) {},
+        clickSkip: () {})
+      ..show();
   }
 
   void _addCircles() async {
@@ -131,22 +192,37 @@ class _HistoryScreenState extends State<HistoryScreen> {
     });
   }
 
+  void _afterLayout(_) {
+    if (Shared.showMapTutorial()) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        showTutorial();
+      });
+    }
+  }
+
   void _initializePage() async {
+    setState(() {
+      busy = true;
+    });
     allMarkers = await MapService.buildMarkers();
     //circles=await MapService.buildMapCircles();
     circles = Shared.getAffectedCitiesCircles();
     showSnackbar(
+        key: keyButton1,
         context: context,
-        content: 'Last Updated at ${Shared.getLastUpdatedStamp()['date']} at ${Shared.getLastUpdatedStamp()['time']}',
+        content:
+            'Last Updated at ${Shared.getLastUpdatedStamp()['date']} at ${Shared.getLastUpdatedStamp()['time']}',
         label: 'Refresh',
         labelPressAction: () async {
           print('Update all locations again!');
-          _busy=true;
-          circles=await MapService.buildMapCircles(context: context);
-          if(circles.isNotEmpty) {
-            _busy=false;
+          //busy=true;
+          circles = await MapService.buildMapCircles(context: context);
+          if (circles.isNotEmpty) {
+            //busy=false;
           }
         });
-    setState(() {});
+    setState(() {
+      busy = false;
+    });
   }
 }

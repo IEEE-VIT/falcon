@@ -5,5 +5,7 @@ class SharedKeys {
   static GlobalKey keyButton1 = GlobalKey();
   static GlobalKey keyButton2 = GlobalKey();
   static GlobalKey keyButton3 = GlobalKey();
+  static GlobalKey keyButton4 = GlobalKey();
+  static GlobalKey keyButton5 = GlobalKey();
 }
 

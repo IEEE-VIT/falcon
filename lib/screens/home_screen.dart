@@ -40,7 +40,6 @@ Future<void> addNewEntry(latitude, longitude) async {
       latitude: latitude,
       longitude: longitude,
       datetime: DateTime.now().toString());
-  print(coordinate.toJson());
   DatabaseService().insertCoordinate(database, coordinate);
   return Future.value();
 }
@@ -113,8 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _currentIndex = 0;
 
-  final List<Widget> _children = [
-    WarningScreen(),
+  List<Widget> _children() => [
+    WarningScreen(showTutorial: showTutorial),
     StatsScreen(),
     HistoryScreen(),
     Shared.isCaseReported() ? AOKScreen() : AlertScreen(),
@@ -126,12 +125,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> children = _children();
     return Scaffold(
-        body: _children[_currentIndex],
+        body: children[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.warning),
+                icon: Icon(
+                  Icons.warning,
+                  key: SharedKeys.keyButton5
+                ),
                 title: Text('Warnings'),
               ),
               BottomNavigationBarItem(
@@ -149,8 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text('History'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.add_alert,
+                icon: Icon( Icons.add_alert,
                   key: SharedKeys.keyButton3,
                 ),
                 title: Text('Alert'),
@@ -251,9 +253,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _afterLayout(_) {
-    Future.delayed(Duration(milliseconds: 100), () {
-      showTutorial();
-    });
+    print(Shared.showWarningTutorial());
+    if (Shared.showWarningTutorial()) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        showTutorial();
+      });
+    }
   }
 
   void initTargets() {
@@ -270,6 +275,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: <Widget>[
                   Text(
                     "Start/Stop location tracking",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.Circle,
+    ));
+    targets.add(TargetFocus(
+      identify: "Target 1",
+      keyTarget: SharedKeys.keyButton5,
+      contents: [
+        ContentTarget(
+            align: AlignContent.top,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Get all necessary warnings and alerts realted to possible encounters",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -368,6 +404,37 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                       fontSize: 20.0,
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.Circle,
+    ));
+    targets.add(TargetFocus(
+      identify: "Target 1",
+      keyTarget: SharedKeys.keyButton4,
+      contents: [
+        ContentTarget(
+            align: AlignContent.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Restart tutorial",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),

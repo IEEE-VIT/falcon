@@ -40,14 +40,15 @@ class _MyAppState extends State<MyApp> {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => Shared.showIntro()?OnBoardingScreen() : HomeScreen(),
-        //'/':(context) => StartScreen(),
+        //'/': (context) => Shared.showIntro()?OnBoardingScreen() : HomeScreen(),
+        '/':(context) => StartScreen(),
         '/begin': (context) => BeginScreen(),
         '/temperature': (context) => TemperatureScreen(),
         '/inquarantine': (context) => InQuarantineScreen(),
         '/warning': (context) => HomeScreen(),
         '/aok': (context) => AOKScreen(),
-        '/stats': (context) => StatsScreen()
+        '/stats': (context) => StatsScreen(),
+        '/onBoarding': (context) => OnBoardingScreen(),
       },
     );
   }
