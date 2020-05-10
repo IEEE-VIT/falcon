@@ -100,24 +100,44 @@ void maybeStartFGS() async {
   }
 }
 
+class ScreenWithIndex{
+  final Widget screen;
+  final int index;
+
+  ScreenWithIndex({this.screen, this.index});
+}
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin<HomeScreen> {
   Database database;
 
   List<TargetFocus> targets = List();
 
   int _currentIndex = 0;
+  List<Key> _destinationKeys;
+  List<AnimationController> _faders;
 
-  List<Widget> _children() => [
-    WarningScreen(showTutorial: showTutorial),
-    StatsScreen(),
-    HistoryScreen(),
-    Shared.isCaseReported() ? AOKScreen() : AlertScreen(),
-    //AlertScreen(),
+  List<ScreenWithIndex> _children() => [
+    ScreenWithIndex(
+      screen: WarningScreen(showTutorial: showTutorial),
+      index: 0
+    ),
+    ScreenWithIndex(
+      screen: StatsScreen(),
+      index: 1
+    ),
+    ScreenWithIndex(
+      screen: HistoryScreen(),
+      index: 2
+    ),
+    ScreenWithIndex(
+      screen: Shared.isCaseReported() ? AOKScreen() : AlertScreen(),
+      index: 3
+    ),
   ];
 
   // GlobalKey keyButton = GlobalKey();
@@ -125,43 +145,68 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> children = _children();
+    final List<ScreenWithIndex> children = _children();
     return Scaffold(
-        body: children[_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.warning,
-                  key: SharedKeys.keyButton5
-                ),
-                title: Text('Warnings'),
+      body: SafeArea(
+        child: Stack(
+          fit: StackFit.expand,
+          children: _children.call().map((ScreenWithIndex screen) {
+            final Widget view = FadeTransition(
+              opacity: _faders[screen.index].drive(CurveTween(curve: Curves.fastOutSlowIn)),
+              child: KeyedSubtree(
+                key: _destinationKeys[screen.index],
+                child: _children.call()[screen.index].screen
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.collections_bookmark,
-                  key: SharedKeys.keyButton1,
-                ),
-                title: Text('Reports'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.map,
-                  key: SharedKeys.keyButton2,
-                ),
-                title: Text('History'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon( Icons.add_alert,
-                  key: SharedKeys.keyButton3,
-                ),
-                title: Text('Alert'),
-              ),
-            ],
-            currentIndex: _currentIndex,
-            selectedItemColor: Color(0xFFFA6400),
-            unselectedItemColor: Color(0xFFFA6400),
-            onTap: onTabTapped));
+            );
+            if (screen.index == _currentIndex) {
+              _faders[screen.index].forward();
+              return view;
+            } else {
+              _faders[screen.index].reverse();
+              if (_faders[screen.index].isAnimating) {
+                return IgnorePointer(child: view);
+              }
+              return Offstage(child: view);
+            }
+          }).toList(),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.warning,
+              key: SharedKeys.keyButton5
+            ),
+            title: Text('Warnings'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.collections_bookmark,
+              key: SharedKeys.keyButton1,
+            ),
+            title: Text('Reports'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.map,
+              key: SharedKeys.keyButton2,
+            ),
+            title: Text('History'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon( Icons.add_alert,
+              key: SharedKeys.keyButton3,
+            ),
+            title: Text('Alert'),
+          ),
+        ],
+        currentIndex: _currentIndex,
+        selectedItemColor: Color(0xFFFA6400),
+        unselectedItemColor: Color(0xFFFA6400),
+        onTap: onTabTapped
+      )
+    );
   }
 
   // Future<void> _listenLocation() async {
@@ -184,12 +229,19 @@ class _HomeScreenState extends State<HomeScreen> {
     //_stopListen();
     //timer?.cancel();
     super.dispose();
+    for (AnimationController controller in _faders)
+      controller.dispose();
     childRef.cancel();
   }
 
   @override
   void initState() {
     _initializePage();
+    _faders = _children.call().map<AnimationController>((ScreenWithIndex screen) {
+      return AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    }).toList();
+    _faders[_currentIndex].value = 1.0;
+    _destinationKeys = List<Key>.generate(_children.call().length, (int index) => GlobalKey()).toList();
     super.initState();
   }
 

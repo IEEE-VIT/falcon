@@ -58,7 +58,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               width: MediaQuery.of(context).size.width,
               child: GoogleMap(
                 initialCameraPosition:
-                    CameraPosition(target: LatLng(21.000, 72.00), zoom: 2.0),
+                    CameraPosition(target: LatLng(21.000, 72.00), zoom: 4.0),
                 markers: Set.from(allMarkers),
                 onMapCreated: mapCreated,
                 circles: circles,

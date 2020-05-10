@@ -170,17 +170,39 @@ class _AlertScreenState extends State<AlertScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              onPressed: 
-              Shared.isCaseReported()
-              ?
-              null
-              :
-              () async {
-                //await uploadDataToFirebase();
-                await FirebaseService.uploadDataToFirebase();
-                Shared.setCaseReported();
-                Navigator.pushNamed(context, '/aok');
-              },
+              onPressed: (){
+                showDialog(
+                  context: context,
+                  builder: (BuildContext ctx){
+                    return AlertDialog(
+                      title: Text('Are you sure you\'re infected?', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                      content: Text('This will mark you as a COVID-19 infected patient.', style: TextStyle(color: Colors.grey),),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('CANCEL', style: TextStyle(color: Color(0xFFFA6400), fontWeight: FontWeight.w500,)),
+                          onPressed: (){
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        FlatButton(
+                          child: Text('REPORT', style: TextStyle(color: Color(0xFFFA6400), fontWeight: FontWeight.w400,)),
+                          onPressed: 
+                            Shared.isCaseReported()
+                            ?
+                            null
+                            :
+                            () async {
+                              //await uploadDataToFirebase();
+                              await FirebaseService.uploadDataToFirebase();
+                              Shared.setCaseReported();
+                              Navigator.pushNamed(context, '/aok');
+                            }
+                        )
+                      ],
+                    );
+                  }
+                );
+              }
             ),
           ),
         ],
