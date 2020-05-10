@@ -49,11 +49,6 @@ class Shared {
     prefs.setBool('showStatsTutorial', null);
     prefs.setBool('showReportTutorial', null);
     prefs.setBool('showMapTutorial', null);
-   // SharedPreferences mySPrefs =
-   //     PreferenceManager.getDefaultSharedPreferences(this);
-   // SharedPreferences.Editor editor = mySPrefs.edit();
-   // editor.remove(key);
-   // editor.apply();
   }
 
   static bool showWarningTutorial() {
