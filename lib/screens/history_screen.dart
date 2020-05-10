@@ -47,7 +47,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     Container(
                       margin: EdgeInsets.all(30.0),
                       child: Text(
-                          'Please wait while we fetch the latest data for you'),
+                        'Please wait while we fetch the latest data for you, this may take some time, but\'s only for first time.',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ],
                 ),
@@ -207,6 +209,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     allMarkers = await MapService.buildMarkers();
     //circles=await MapService.buildMapCircles();
     circles = Shared.getAffectedCitiesCircles();
+    setState(() {
+      busy = false;
+    });
     showSnackbar(
         key: keyButton1,
         context: context,
@@ -221,8 +226,5 @@ class _HistoryScreenState extends State<HistoryScreen> {
             //busy=false;
           }
         });
-    setState(() {
-      busy = false;
-    });
   }
 }

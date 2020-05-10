@@ -54,7 +54,7 @@ void foregroundServiceFunction() async {
       "The current location is: ${position.latitude}, ${position.longitude}");
   addNewEntry(position.latitude, position.longitude);
 
-  ForegroundService.notification.setText("The time was: ${DateTime.now()}");
+  //ForegroundService.notification.setText("The time was: ${DateTime.now()}");
 }
 
 void maybeStartFGS() async {
@@ -89,15 +89,18 @@ void maybeStartFGS() async {
     await ForegroundService.setServiceIntervalSeconds(
         5); //necessity of editMode is dubious (see function comments) await ForegroundService.notification.startEditMode();
     await ForegroundService.notification
-        .setTitle("Example Title: ${DateTime.now()}");
+        .setTitle("Falcon is keenly protecting you");
     await ForegroundService.notification
-        .setText("Example Text: ${DateTime.now()}");
+        .setText("Any possible interactions will be reported");
 
     await ForegroundService.notification.finishEditMode();
 
     await ForegroundService.startForegroundService(foregroundServiceFunction);
     await ForegroundService.getWakeLock();
   }
+  await ForegroundService.notification.setPriority(AndroidNotificationPriority.LOW);
+ // await ForegroundService.setupIsolateCommunication((data) {
+ // });
 }
 
 class ScreenWithIndex{
@@ -139,9 +142,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin<H
       index: 3
     ),
   ];
-
-  // GlobalKey keyButton = GlobalKey();
-  // GlobalKey keyButton2 = GlobalKey();
 
   @override
   Widget build(BuildContext context) {

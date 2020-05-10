@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:tutorial_coach_mark/animated_focus_light.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../services/shared.dart';
