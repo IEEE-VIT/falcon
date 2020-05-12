@@ -13,7 +13,7 @@ class AndroidFirstPage extends StatefulWidget {
   _AndroidFirstPageState createState() => _AndroidFirstPageState();
 }
 
-class _AndroidFirstPageState extends State<AndroidFirstPage> {
+class _AndroidFirstPageState extends State<AndroidFirstPage> with AutomaticKeepAliveClientMixin {
   int totalCases = 0;
   int prevTotalCases = 0;
   int deaths = 0;
@@ -225,6 +225,9 @@ class _AndroidFirstPageState extends State<AndroidFirstPage> {
                 ),
               ));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class Card extends StatelessWidget {

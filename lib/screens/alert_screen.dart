@@ -130,7 +130,7 @@ class _AlertScreenState extends State<AlertScreen> {
                 builder: (BuildContext ctx){
                   return AlertDialog(
                     title: Text('Are you sure you\'re infected?', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-                    content: Text('This will mark you as a COVID-19 infected patient.', style: TextStyle(color: Colors.grey),),
+                    content: Text('This will mark you as an COVID-19 infected patient.', style: TextStyle(color: Colors.grey),),
                     actions: <Widget>[
                       FlatButton(
                         child: Text('NO', style: TextStyle(color: Color(0xFFFA6400), fontWeight: FontWeight.w500,)),

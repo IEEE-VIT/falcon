@@ -49,7 +49,7 @@ class NewsScreen extends StatefulWidget {
   _NewsScreenState createState() => _NewsScreenState();
 }
 
-class _NewsScreenState extends State<NewsScreen>{
+class _NewsScreenState extends State<NewsScreen> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
@@ -156,7 +156,7 @@ class _NewsScreenState extends State<NewsScreen>{
                               );
                             },
                             child: Container(
-                              padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                              padding: EdgeInsets.fromLTRB(12, 4, 12, 12),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
@@ -209,4 +209,7 @@ class _NewsScreenState extends State<NewsScreen>{
           ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

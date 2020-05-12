@@ -136,8 +136,8 @@ class _HomeScreenState extends State<HomeScreen>
     if (_currentIndex == 0) {
       if (Shared.showStatsTutorial()) {
         Future.delayed(Duration(milliseconds: 100), () {
-          showTutorial(targets: SharedKeys.statsTargets);
-          showTutorial(targets: targets);
+          showTutorial(targets: SharedKeys.statsTargets, isHome: true);
+          //showTutorial(targets: targets, isHome: true);
         });
       }
     } else if (_currentIndex == 1) {
@@ -317,13 +317,14 @@ class _HomeScreenState extends State<HomeScreen>
     return Future.value();
   }
 
-  void showTutorial({@required List<TargetFocus> targets}) {
+  void showTutorial({@required List<TargetFocus> targets, bool isHome = false}) {
     TutorialCoachMark(context,
         targets: targets,
         colorShadow: Colors.red,
         textSkip: "SKIP",
         paddingFocus: 10,
         opacityShadow: 0.8,
+        textStyleSkip: isHome ? TextStyle(color: Colors.transparent) : TextStyle(color: Colors.white),
         finish: () {},
         clickTarget: (target) {},
         clickSkip: () {})

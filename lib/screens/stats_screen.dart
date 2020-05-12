@@ -67,16 +67,17 @@ class _StatsScreenState extends State<StatsScreen> {
         initialIndex: 0,
         child: Scaffold(
             appBar: AppBar(
-              //automaticallyImplyLeading: false,
               backgroundColor: Colors.white,
               title: Transform.translate(
                 offset: Offset(0.0, -15.0),
-                child: Text(
-                  'Reports',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.w900),
+                child: Container(
+                  child: Text(
+                    'Reports',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.w900),
+                  ),
                 ),
               ),
               bottom: TabBar(
