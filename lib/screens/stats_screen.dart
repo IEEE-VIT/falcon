@@ -67,15 +67,20 @@ class _StatsScreenState extends State<StatsScreen> {
         initialIndex: 0,
         child: Scaffold(
             appBar: AppBar(
+              //automaticallyImplyLeading: false,
               backgroundColor: Colors.white,
-              title: Text(
-                'Reports',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.w900),
+              title: Transform.translate(
+                offset: Offset(0.0, -15.0),
+                child: Text(
+                  'Reports',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.w900),
+                ),
               ),
               bottom: TabBar(
+                labelPadding: EdgeInsets.all(0.0),
                 indicatorColor: Color(0xFFFA6400),
                 labelColor: Color(0xFFFA6400),
                 tabs: <Widget>[
@@ -91,7 +96,10 @@ class _StatsScreenState extends State<StatsScreen> {
               ),
             ),
             body: TabBarView(
-              children: <Widget>[AndroidFirstPage(), NewsScreen()],
+              children: <Widget>[
+                AndroidFirstPage(),
+                NewsScreen(),
+              ],
             )),
       ));
     }

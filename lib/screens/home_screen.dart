@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:tutorial_coach_mark/animated_focus_light.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
@@ -17,7 +16,6 @@ import '../services/firebaseService.dart';
 import '../services/shared.dart';
 import '../services/sharedKeys.dart';
 import 'alert_screen.dart';
-import 'aok_screen.dart';
 import 'history_screen.dart';
 import 'stats_screen.dart';
 import 'warning_screen.dart';
@@ -40,7 +38,7 @@ Future<void> addNewEntry(latitude, longitude) async {
       latitude: latitude,
       longitude: longitude,
       datetime: DateTime.now().toString());
-  DatabaseService().insertCoordinate(database, coordinate);
+  //DatabaseService().insertCoordinate(database, coordinate);
   return Future.value();
 }
 
@@ -50,8 +48,8 @@ void foregroundServiceFunction() async {
   Position position = await Geolocator()
       .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   //print(position);
- // debugPrint(
- //     "The current location is: ${position.latitude}, ${position.longitude}");
+  // debugPrint(
+  //     "The current location is: ${position.latitude}, ${position.longitude}");
   addNewEntry(position.latitude, position.longitude);
 
   //ForegroundService.notification.setText("The time was: ${DateTime.now()}");
@@ -59,31 +57,16 @@ void foregroundServiceFunction() async {
 
 void maybeStartFGS() async {
   print('Starting FGS');
-  //final Geolocator geolocator = Geolocator()
-  // ..forceAndroidLocationManager = true;
-  GeolocationStatus geolocationStatus =
-      await Geolocator().checkGeolocationPermissionStatus();
-  print(geolocationStatus);
-  if ((geolocationStatus == GeolocationStatus.denied ||
-      geolocationStatus == GeolocationStatus.disabled)) {
-    print('Location permission not given! Asking for permission');
-    await Permission.locationWhenInUse.request();
-  }
-//    _serviceEnabled = await location.serviceEnabled();
-//  if (!_serviceEnabled) {
-//    _serviceEnabled = await location.requestService();
-//    if (!_serviceEnabled) {
-//      return;
-//    }
-//  }
-//
-//  _permissionGranted = await location.hasPermission();
-//  if (_permissionGranted == PermissionStatus.denied) {
-//    _permissionGranted = await location.requestPermission();
-//    if (_permissionGranted != PermissionStatus.granted) {
-//      return;
-//    }
-//  }
+ // GeolocationStatus geolocationStatus =
+ //     await Geolocator().checkGeolocationPermissionStatus();
+ // print(geolocationStatus);
+ // if ((geolocationStatus == GeolocationStatus.denied ||
+ //     geolocationStatus == GeolocationStatus.disabled)) {
+ //   print('Location permission not given! Asking for permission');
+ //   await Permission.locationWhenInUse.request();
+ // } else {
+ //   return;
+ // }
   print('Done!');
   if (!(await ForegroundService.foregroundServiceIsStarted())) {
     await ForegroundService.setServiceIntervalSeconds(
@@ -132,7 +115,10 @@ class _HomeScreenState extends State<HomeScreen>
           index: 0,
         ),
         ScreenWithIndex(
-          screen: WarningScreen(showTutorial: showTutorial, targets: targets,),
+          screen: WarningScreen(
+            showTutorial: showTutorial,
+            targets: targets,
+          ),
           index: 1,
         ),
         ScreenWithIndex(
@@ -140,7 +126,8 @@ class _HomeScreenState extends State<HomeScreen>
           index: 2,
         ),
         ScreenWithIndex(
-          screen: Shared.isCaseReported() ? AOKScreen() : AlertScreen(),
+          //screen: Shared.isCaseReported() ? AOKScreen() : AlertScreen(),
+          screen: AlertScreen(),
           index: 3,
         ),
       ];
@@ -153,19 +140,18 @@ class _HomeScreenState extends State<HomeScreen>
           showTutorial(targets: targets);
         });
       }
-    }
-    else if (_currentIndex == 1) {
+    } else if (_currentIndex == 1) {
       if (Shared.showWarningTutorial()) {
         Future.delayed(Duration(milliseconds: 100), () {
           showTutorial(targets: SharedKeys.warningTargets);
         });
       }
-    }  else if (_currentIndex == 2) {
+    } else if (_currentIndex == 2) {
       if (Shared.containskey('affectedCitiesCircles')) {
-        if(Shared.showMapTutorial()) {
-        Future.delayed(Duration(milliseconds: 100), () {
-          showTutorial(targets: SharedKeys.mapTargets);
-        });
+        if (Shared.showMapTutorial()) {
+          Future.delayed(Duration(milliseconds: 100), () {
+            showTutorial(targets: SharedKeys.mapTargets);
+          });
         }
       }
     } else if (_currentIndex == 3) {
@@ -344,14 +330,83 @@ class _HomeScreenState extends State<HomeScreen>
       ..show();
   }
 
-  void _afterLayout(_) {
-  }
+  void _afterLayout(_) {}
 
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: Text(
+              'Falcon is dedicated to protect you',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+            content: Text(
+              'But we will need your cooperation for that, please allow it to track your location, all the data is collected anonymously and doesn\'t leave your device',
+              style: TextStyle(color: Colors.grey),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'NO',
+                  style: TextStyle(
+                    color: Color(0xFFFA6400),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('I AM IN',
+                    style: TextStyle(
+                      color: Color(0xFFFA6400),
+                      fontWeight: FontWeight.w400,
+                    )),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  GeolocationStatus geolocationStatus =
+                      await Geolocator().checkGeolocationPermissionStatus();
+                  if ((geolocationStatus == GeolocationStatus.denied ||
+                      geolocationStatus == GeolocationStatus.disabled)) {
+                    print(
+                        'Location permission not given! Asking for permission');
+                    final PermissionStatus permissionStatus =
+                        await Permission.locationWhenInUse.request();
+                    if (permissionStatus == PermissionStatus.granted) {
+                      maybeStartFGS();
+                    } else {
+                    }
+                  } else {
+                    maybeStartFGS();
+                  }
+                },
+              ),
+            ],
+          );
+        });
+  }
 
   void _initializePage() async {
     //await _listenLocation();
     // timer = Timer.periodic(Duration(seconds: 10), (Timer t) => addNewEntry());
-    maybeStartFGS();
+    GeolocationStatus geolocationStatus =
+        await Geolocator().checkGeolocationPermissionStatus();
+    print('((_))');
+    print(geolocationStatus);
+    if (geolocationStatus == GeolocationStatus.granted) {
+      maybeStartFGS();
+    } else if ((geolocationStatus == GeolocationStatus.denied ||
+        geolocationStatus == GeolocationStatus.disabled ||
+        geolocationStatus == GeolocationStatus.restricted ||
+        geolocationStatus == GeolocationStatus.unknown)) {
+      print('Location permission not given! Asking for permission');
+      _showDialog();
+    } else {
+      maybeStartFGS();
+    }
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     await _initDatabase();
     //_setUpListener();

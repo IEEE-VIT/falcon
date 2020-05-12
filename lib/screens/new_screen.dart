@@ -158,6 +158,7 @@ class _NewsScreenState extends State<NewsScreen>{
                             child: Container(
                               padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   Expanded(
                                     child: CachedNetworkImage(

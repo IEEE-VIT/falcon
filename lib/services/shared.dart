@@ -160,6 +160,10 @@ class Shared {
     return prefs.setBool('caseReported', true);
   }
 
+  static bool getCaseReported() {
+    return prefs.getBool('caseReported');
+  }
+
   static isCaseReported() {
     return caseReported;
   }

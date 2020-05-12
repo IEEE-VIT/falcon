@@ -25,22 +25,22 @@ class SharedKeys {
   }
 
   static void initStatsTargets() {
-    statsTargets.add(makeTarget(
-      key: statsKeyButton1,
-      align: AlignContent.bottom,
-      title: 'Get the latest statistics',
-      desc:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.',
-      shapeLightFocus: ShapeLightFocus.RRect,
-    ));
-    statsTargets.add(makeTarget(
-      key: statsKeyButton2,
-      align: AlignContent.bottom,
-      title: 'Get the latest news',
-      desc:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.',
-      shapeLightFocus: ShapeLightFocus.RRect,
-    ));
+   // statsTargets.add(makeTarget(
+   //   key: statsKeyButton1,
+   //   align: AlignContent.bottom,
+   //   title: 'Get the latest statistics',
+   //   desc:
+   //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.',
+   //   shapeLightFocus: ShapeLightFocus.RRect,
+   // ));
+   // statsTargets.add(makeTarget(
+   //   key: statsKeyButton2,
+   //   align: AlignContent.bottom,
+   //   title: 'Get the latest news',
+   //   desc:
+   //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.',
+   //   shapeLightFocus: ShapeLightFocus.RRect,
+   // ));
     statsTargets.add(makeTarget(
       key: keyButton,
       align: AlignContent.top,
