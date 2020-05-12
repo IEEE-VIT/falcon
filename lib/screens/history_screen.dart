@@ -5,9 +5,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:tutorial_coach_mark/animated_focus_light.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 import '../services/mapServices.dart';
 import '../services/shared.dart';
+import '../services/sharedKeys.dart';
 import '../widgets/snackBar.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -31,11 +33,26 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   List<TargetFocus> targets = List();
 
-  GlobalKey keyButton1 = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: <Widget>[
+          IconButton(
+            iconSize: 36.0,
+            onPressed: () {
+              initializeMapPage();
+            },
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
       body: busy
           ? Container(
               child: Center(
@@ -51,6 +68,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
+                   // Container(
+                   //   margin: EdgeInsets.all(10.0),
+                   //   child: LiquidCircularProgressIndicator(
+                   //     value: 0.25, // Defaults to 0.5.
+                   //     valueColor: AlwaysStoppedAnimation(Colors
+                   //         .pink), // Defaults to the current Theme's accentColor.
+                   //     backgroundColor: Colors
+                   //         .white, // Defaults to the current Theme's backgroundColor.
+                   //     borderColor: Colors.red,
+                   //     borderWidth: 5.0,
+                   //     direction: Axis.horizontal, center: Text("Loading..."),
+                   //   ),
+                   // ),
                   ],
                 ),
               ),
@@ -80,44 +110,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    _initializePage();
-    initTargets();
+    initializeMapPage();
+    SharedKeys.initMapTargets();
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     //_addCircles();
-  }
-
-  void initTargets() {
-    targets.add(TargetFocus(
-      identify: "Target 1",
-      keyTarget: keyButton1,
-      contents: [
-        ContentTarget(
-            align: AlignContent.top,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Refresh map data with the help of this button",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            ))
-      ],
-      shape: ShapeLightFocus.RRect,
-    ));
   }
 
   void mapCreated(GoogleMapController controller) {
@@ -139,61 +135,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ..show();
   }
 
-  void _addCircles() async {
-    final casesData = await getDistrictCases();
-    for (int i = 0; i < casesData.length; i++) {
-      for (int j = 0; j < casesData[i].districtData.length; j++) {
-        if (casesData[i].districtData[j].district == "Unknown") {
-          continue;
-        }
-        try {
-          //print(casesData[i].districtData[j].district);
-          final addresses = await Geolocator()
-              .placemarkFromAddress(casesData[i].districtData[j].district);
-          var lat = addresses.first.position.latitude;
-          var long = addresses.first.position.longitude;
-          final latlng = LatLng(lat, long);
-          coords.add([latlng, casesData[i].districtData[j].confirmed]);
-        } on Exception {
-          continue;
-        }
-      }
-    }
-    setState(() {
-      for (int k = 0; k < coords.length; k++) {
-        double radius = 0;
-        int color = 0;
-        if (coords[k][1] < 50) {
-          radius = 2500;
-          color = 300;
-        } else if (coords[k][1] < 100) {
-          radius = 5000;
-          color = 400;
-        } else if (coords[k][1] < 200) {
-          radius = 10000;
-          color = 500;
-        } else if (coords[k][1] < 300) {
-          radius = 20000;
-          color = 600;
-        } else if (coords[k][1] < 500) {
-          radius = 30000;
-          color = 700;
-        } else {
-          radius = 50000;
-          color = 900;
-        }
-        circles.add(Circle(
-            circleId: CircleId(coords[k][1].toString()),
-            center: coords[k][0],
-            radius: radius,
-            strokeColor: Colors.red[color],
-            strokeWidth: 5,
-            fillColor: Colors.red[color]));
-      }
-      print("HEREEEEEEE" + circles.toString());
-    });
-  }
-
   void _afterLayout(_) {
     if (Shared.showMapTutorial()) {
       Future.delayed(Duration(milliseconds: 100), () {
@@ -202,10 +143,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
-  void _initializePage() async {
+  void initializeMapPage() async {
     setState(() {
       busy = true;
     });
+    if(!Shared.containskey('affectedCitiesCircles')) {
+      print('Getting all the circles as its first time entry');
+      await MapService.buildMapCircles();
+    }
     allMarkers = await MapService.buildMarkers();
     //circles=await MapService.buildMapCircles();
     circles = Shared.getAffectedCitiesCircles();
@@ -213,7 +158,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       busy = false;
     });
     showSnackbar(
-        key: keyButton1,
+        key: SharedKeys.mapKeyButton1,
         context: context,
         content:
             'Last Updated at ${Shared.getLastUpdatedStamp()['date']} at ${Shared.getLastUpdatedStamp()['time']}',
@@ -225,6 +170,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           if (circles.isNotEmpty) {
             //busy=false;
           }
+          initializeMapPage();
         });
   }
 }

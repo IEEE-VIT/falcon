@@ -12,9 +12,11 @@ class WarningScreen extends StatefulWidget {
 
   WarningScreen({
     @required this.showTutorial,
+    @required this.targets,
   });
 
   final Function showTutorial;
+  final List<TargetFocus> targets;
 
   @override
   _WarningScreenState createState() => _WarningScreenState();
@@ -70,7 +72,7 @@ class _WarningScreenState extends State<WarningScreen> {
           }
         },
         child: Tooltip(
-            key: SharedKeys.keyButton,
+            key: SharedKeys.warningKeyButton1,
             showDuration: Duration(),
             message: 'Stop Collecting Location Data',
             child: Icon(Icons.stop)),
@@ -103,7 +105,7 @@ class _WarningScreenState extends State<WarningScreen> {
                     key: SharedKeys.keyButton4,
                     onPressed: () {
                       Shared.resetTutorial();
-                      widget.showTutorial();
+                      widget.showTutorial(targets: targets);
                     },
                     icon: Icon(Icons.refresh),
                   ),
@@ -203,32 +205,11 @@ class _WarningScreenState extends State<WarningScreen> {
     return first.thoroughfare+', '+first.locality+', '+first.administrativeArea+', '+first.subAdministrativeArea;
   }
 
-  void showTutorial() {
-    TutorialCoachMark(context,
-        targets: targets,
-        colorShadow: Colors.red,
-        textSkip: "SKIP",
-        paddingFocus: 10,
-        opacityShadow: 0.8, finish: () {
-      print("finish");
-    }, clickTarget: (target) {
-      print(target);
-    }, clickSkip: () {
-      print("skip");
-    })
-      ..show();
-  }
-
   @override
   void initState() {
     super.initState();
+    SharedKeys.initWarningTargets();
     _initializePage();
-  }
-
-  void _afterLayout(_) {
-    Future.delayed(Duration(milliseconds: 100), () {
-      showTutorial();
-    });
   }
 
  // void initTargets() {

@@ -49,9 +49,9 @@ void foregroundServiceFunction() async {
   //print(_locationData);
   Position position = await Geolocator()
       .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  print(position);
-  debugPrint(
-      "The current location is: ${position.latitude}, ${position.longitude}");
+  //print(position);
+ // debugPrint(
+ //     "The current location is: ${position.latitude}, ${position.longitude}");
   addNewEntry(position.latitude, position.longitude);
 
   //ForegroundService.notification.setText("The time was: ${DateTime.now()}");
@@ -98,12 +98,13 @@ void maybeStartFGS() async {
     await ForegroundService.startForegroundService(foregroundServiceFunction);
     await ForegroundService.getWakeLock();
   }
-  await ForegroundService.notification.setPriority(AndroidNotificationPriority.LOW);
- // await ForegroundService.setupIsolateCommunication((data) {
- // });
+  await ForegroundService.notification
+      .setPriority(AndroidNotificationPriority.LOW);
+  // await ForegroundService.setupIsolateCommunication((data) {
+  // });
 }
 
-class ScreenWithIndex{
+class ScreenWithIndex {
   final Widget screen;
   final int index;
 
@@ -115,7 +116,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with TickerProviderStateMixin<HomeScreen> {
   Database database;
 
   List<TargetFocus> targets = List();
@@ -125,88 +127,125 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin<H
   List<AnimationController> _faders;
 
   List<ScreenWithIndex> _children() => [
-    ScreenWithIndex(
-      screen: WarningScreen(showTutorial: showTutorial),
-      index: 0
-    ),
-    ScreenWithIndex(
-      screen: StatsScreen(),
-      index: 1
-    ),
-    ScreenWithIndex(
-      screen: HistoryScreen(),
-      index: 2
-    ),
-    ScreenWithIndex(
-      screen: Shared.isCaseReported() ? AOKScreen() : AlertScreen(),
-      index: 3
-    ),
-  ];
+        ScreenWithIndex(
+          screen: StatsScreen(),
+          index: 0,
+        ),
+        ScreenWithIndex(
+          screen: WarningScreen(showTutorial: showTutorial, targets: targets,),
+          index: 1,
+        ),
+        ScreenWithIndex(
+          screen: HistoryScreen(),
+          index: 2,
+        ),
+        ScreenWithIndex(
+          screen: Shared.isCaseReported() ? AOKScreen() : AlertScreen(),
+          index: 3,
+        ),
+      ];
+
+  void _mapTutorialScreen() {
+    if (_currentIndex == 0) {
+      if (Shared.showStatsTutorial()) {
+        Future.delayed(Duration(milliseconds: 100), () {
+          showTutorial(targets: SharedKeys.statsTargets);
+          showTutorial(targets: targets);
+        });
+      }
+    }
+    else if (_currentIndex == 1) {
+      if (Shared.showWarningTutorial()) {
+        Future.delayed(Duration(milliseconds: 100), () {
+          showTutorial(targets: SharedKeys.warningTargets);
+        });
+      }
+    }  else if (_currentIndex == 2) {
+      if (Shared.containskey('affectedCitiesCircles')) {
+        if(Shared.showMapTutorial()) {
+        Future.delayed(Duration(milliseconds: 100), () {
+          showTutorial(targets: SharedKeys.mapTargets);
+        });
+        }
+      }
+    } else if (_currentIndex == 3) {
+      if (Shared.showReportTutorial()) {
+        Future.delayed(Duration(milliseconds: 100), () {
+          showTutorial(targets: SharedKeys.reportTargets);
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<ScreenWithIndex> children = _children();
+    //final List<ScreenWithIndex> children = _children();
+    final Function children = _children;
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          fit: StackFit.expand,
-          children: _children.call().map((ScreenWithIndex screen) {
-            final Widget view = FadeTransition(
-              opacity: _faders[screen.index].drive(CurveTween(curve: Curves.fastOutSlowIn)),
-              child: KeyedSubtree(
-                key: _destinationKeys[screen.index],
-                child: _children.call()[screen.index].screen
-              ),
-            );
-            if (screen.index == _currentIndex) {
-              _faders[screen.index].forward();
-              return view;
-            } else {
-              _faders[screen.index].reverse();
-              if (_faders[screen.index].isAnimating) {
-                return IgnorePointer(child: view);
-              }
-              return Offstage(child: view);
-            }
-          }).toList(),
+        body: SafeArea(
+          child: Stack(
+            fit: StackFit.expand,
+            children: children
+                .call()
+                .map((ScreenWithIndex screen) {
+                  final Widget view = FadeTransition(
+                    opacity: _faders[screen.index]
+                        .drive(CurveTween(curve: Curves.fastOutSlowIn)),
+                    child: KeyedSubtree(
+                        key: _destinationKeys[screen.index],
+                        child: children.call()[screen.index].screen),
+                  );
+                  if (screen.index == _currentIndex) {
+                    _mapTutorialScreen();
+                    _faders[screen.index].forward();
+                    return view;
+                  } else {
+                    _faders[screen.index].reverse();
+                    if (_faders[screen.index].isAnimating) {
+                      return IgnorePointer(child: view);
+                    }
+                    return Offstage(child: view);
+                  }
+                })
+                .cast<Widget>()
+                .toList(),
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.warning,
-              key: SharedKeys.keyButton5
-            ),
-            title: Text('Warnings'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.collections_bookmark,
-              key: SharedKeys.keyButton1,
-            ),
-            title: Text('Reports'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.map,
-              key: SharedKeys.keyButton2,
-            ),
-            title: Text('History'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon( Icons.add_alert,
-              key: SharedKeys.keyButton3,
-            ),
-            title: Text('Alert'),
-          ),
-        ],
-        currentIndex: _currentIndex,
-        selectedItemColor: Color(0xFFFA6400),
-        unselectedItemColor: Color(0xFFFA6400),
-        onTap: onTabTapped
-      )
-    );
+        bottomNavigationBar: BottomNavigationBar(
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.collections_bookmark,
+                  key: SharedKeys.keyButton,
+                ),
+                title: Text('Reports'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.warning,
+                  key: SharedKeys.keyButton1,
+                ),
+                title: Text('Warnings'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.map,
+                  key: SharedKeys.keyButton2,
+                ),
+                title: Text('History'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.add_alert,
+                  key: SharedKeys.keyButton3,
+                ),
+                title: Text('Alert'),
+              ),
+            ],
+            currentIndex: _currentIndex,
+            selectedItemColor: Color(0xFFFA6400),
+            unselectedItemColor: Color(0xFFFA6400),
+            onTap: onTabTapped));
   }
 
   // Future<void> _listenLocation() async {
@@ -229,19 +268,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin<H
     //_stopListen();
     //timer?.cancel();
     super.dispose();
-    for (AnimationController controller in _faders)
-      controller.dispose();
+    for (AnimationController controller in _faders) controller.dispose();
     childRef.cancel();
   }
 
   @override
   void initState() {
+    //533
     _initializePage();
-    _faders = _children.call().map<AnimationController>((ScreenWithIndex screen) {
-      return AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    _faders =
+        _children.call().map<AnimationController>((ScreenWithIndex screen) {
+      return AnimationController(
+          vsync: this, duration: Duration(milliseconds: 200));
     }).toList();
     _faders[_currentIndex].value = 1.0;
-    _destinationKeys = List<Key>.generate(_children.call().length, (int index) => GlobalKey()).toList();
+    _destinationKeys =
+        List<Key>.generate(_children.call().length, (int index) => GlobalKey())
+            .toList();
     super.initState();
   }
 
@@ -288,245 +331,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin<H
     return Future.value();
   }
 
-  void showTutorial() {
+  void showTutorial({@required List<TargetFocus> targets}) {
     TutorialCoachMark(context,
         targets: targets,
         colorShadow: Colors.red,
         textSkip: "SKIP",
         paddingFocus: 10,
-        opacityShadow: 0.8, finish: () {
-      print("finish");
-    }, clickTarget: (target) {
-      print(target);
-    }, clickSkip: () {
-      print("skip");
-    })
+        opacityShadow: 0.8,
+        finish: () {},
+        clickTarget: (target) {},
+        clickSkip: () {})
       ..show();
   }
 
   void _afterLayout(_) {
-    print(Shared.showWarningTutorial());
-    if (Shared.showWarningTutorial()) {
-      Future.delayed(Duration(milliseconds: 100), () {
-        showTutorial();
-      });
-    }
   }
 
-  void initTargets() {
-    targets.add(TargetFocus(
-      identify: "Target 1",
-      keyTarget: SharedKeys.keyButton,
-      contents: [
-        ContentTarget(
-            align: AlignContent.top,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Start/Stop location tracking",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            ))
-      ],
-      shape: ShapeLightFocus.Circle,
-    ));
-    targets.add(TargetFocus(
-      identify: "Target 1",
-      keyTarget: SharedKeys.keyButton5,
-      contents: [
-        ContentTarget(
-            align: AlignContent.top,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Get all necessary warnings and alerts realted to possible encounters",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            ))
-      ],
-      shape: ShapeLightFocus.Circle,
-    ));
-    targets.add(TargetFocus(
-      identify: "Target 2",
-      keyTarget: SharedKeys.keyButton1,
-      contents: [
-        ContentTarget(
-            align: AlignContent.top,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Gain all round covid updates from trustful sources",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            ))
-      ],
-      shape: ShapeLightFocus.Circle,
-    ));
-    targets.add(TargetFocus(
-      identify: "Target 3",
-      keyTarget: SharedKeys.keyButton2,
-      contents: [
-        ContentTarget(
-            align: AlignContent.top,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Check data with the help of map",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            ))
-      ],
-      shape: ShapeLightFocus.Circle,
-    ));
-    targets.add(TargetFocus(
-      identify: "Target 4",
-      keyTarget: SharedKeys.keyButton3,
-      contents: [
-        ContentTarget(
-            align: AlignContent.top,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Report your case",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            ))
-      ],
-      shape: ShapeLightFocus.Circle,
-    ));
-    targets.add(TargetFocus(
-      identify: "Target 1",
-      keyTarget: SharedKeys.keyButton4,
-      contents: [
-        ContentTarget(
-            align: AlignContent.bottom,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Restart tutorial",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            ))
-      ],
-      shape: ShapeLightFocus.Circle,
-    ));
-  }
 
   void _initializePage() async {
     //await _listenLocation();
     // timer = Timer.periodic(Duration(seconds: 10), (Timer t) => addNewEntry());
     maybeStartFGS();
-    initTargets();
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     await _initDatabase();
     //_setUpListener();
     FirebaseService.setUpListener();
-  }
-
-  void _onChangeDetection(Event event) {
-    //print(event.snapshot);
-    print("Change detected!");
-    print(event.snapshot.value);
-    print(event.snapshot);
-    onFirebaseChange(event.snapshot.value);
-  }
-
-  void _setUpListener() {
-    final childRef =
-        DBRef.child('users').onChildAdded.listen(_onChangeDetection);
-    // final childRef=DBRef.onChildChanged.listen(_onChageDetection);
-    print(childRef);
-    print("Listener Set!");
   }
 }

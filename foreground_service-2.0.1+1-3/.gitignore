@@ -1,0 +1,14 @@
+.DS_Store
+.dart_tool/
+
+.packages
+.pub/
+
+build/
+.idea/
+
+*.lock
+
+example/ios
+/ios/*
+!ios/foreground_service.podspec

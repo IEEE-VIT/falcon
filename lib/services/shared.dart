@@ -21,7 +21,7 @@ class Shared {
       var uuid = new Uuid();
       String uUID = uuid.v4();
       prefs.setString('uuid', uUID);
-      MapService.buildMapCircles();
+      //MapService.buildMapCircles();
       print('First Time enter');
       print('UUID:$uUID');
     } else {
@@ -29,6 +29,10 @@ class Shared {
     }
     print('Shared Preferences Initialized!');
     return Future.value();
+  }
+
+  static bool containskey(String key) {
+    return prefs.containsKey(key);
   }
 
   static bool showIntro() {
@@ -55,6 +59,7 @@ class Shared {
     if (prefs == null) {
       return false;
     }
+    print(prefs.containsKey('showWarningTutorial'));
     if (!prefs.containsKey('showWarningTutorial')) {
       prefs.setBool('showWarningTutorial', false);
       return true;
@@ -173,10 +178,15 @@ class Shared {
     Set<Circle> circles = Set();
     double radius = 0;
     int color = 0;
-    List<dynamic> citiesData =
-        json.decode(prefs.getString('affectedCitiesCircles'));
-    if (citiesData == null) {
+   // List<dynamic> citiesData =
+   //     json.decode(prefs.getString('affectedCitiesCircles'));
+    dynamic cities = prefs.getString('affectedCitiesCircles');
+    dynamic citiesData;
+    if (cities == null) {
       citiesData = [];
+    }
+    else {
+      citiesData = json.decode(cities);
     }
     for (int i = 0; i < citiesData.length; i++) {
       if (citiesData[i]['confirmed'] < 50) {

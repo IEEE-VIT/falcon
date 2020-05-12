@@ -7,6 +7,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:falcon_corona_app/services/databaseService.dart';
 import '../services/firebaseService.dart';
 import '../services/shared.dart';
+import '../services/sharedKeys.dart';
 
 class AlertScreen extends StatefulWidget {
 
@@ -43,68 +44,10 @@ class _AlertScreenState extends State<AlertScreen> {
 
   List<TargetFocus> targets = List();
 
-  GlobalKey keyButton1 = GlobalKey();
-
-  void initTargets() {
-    targets.add(TargetFocus(
-      identify: "Target 1",
-      keyTarget: keyButton1,
-      contents: [
-        ContentTarget(
-            align: AlignContent.bottom,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "If you are infected, help others by clicking this button!",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tortor eget maximus iaculis.",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            ))
-      ],
-      shape: ShapeLightFocus.RRect,
-    ));
-  }
-
-
-  void showTutorial() {
-    TutorialCoachMark(context,
-        targets: targets,
-        colorShadow: Colors.red,
-        textSkip: "SKIP",
-        paddingFocus: 10,
-        opacityShadow: 0.8, finish: () {
-    }, clickTarget: (target) {
-    }, clickSkip: () {
-    })
-      ..show();
-  }
-
-  void _afterLayout(_) {
-    if (Shared.showReportTutorial()) {
-      Future.delayed(Duration(milliseconds: 100), () {
-        showTutorial();
-      });
-    }
-  }
-
   void initState() {
     super.initState();
-    initTargets();
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    SharedKeys.initReportTargets();
+    //WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
   }
 
   @override
@@ -157,7 +100,7 @@ class _AlertScreenState extends State<AlertScreen> {
             width: 281.0,
             height: 49.0,
             child: RaisedButton(
-              key: keyButton1,
+              key: SharedKeys.reportKeyButton1,
               child: Text(
                 'Report Case',
                 style: TextStyle(
@@ -179,7 +122,7 @@ class _AlertScreenState extends State<AlertScreen> {
                       content: Text('This will mark you as a COVID-19 infected patient.', style: TextStyle(color: Colors.grey),),
                       actions: <Widget>[
                         FlatButton(
-                          child: Text('CANCEL', style: TextStyle(color: Color(0xFFFA6400), fontWeight: FontWeight.w500,)),
+                          child: Text('NO', style: TextStyle(color: Color(0xFFFA6400), fontWeight: FontWeight.w500,)),
                           onPressed: (){
                             Navigator.of(context).pop();
                           },

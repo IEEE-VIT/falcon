@@ -19,7 +19,7 @@ class MapService {
           continue;
         }
         try {
-          print(casesData[i].districtData[j].district);
+          //print(casesData[i].districtData[j].district);
           final addresses = await Geolocator()
               .placemarkFromAddress(casesData[i].districtData[j].district);
           var lat = addresses.first.position.latitude;
@@ -34,6 +34,9 @@ class MapService {
         } on Exception {
           continue;
         }
+      }
+      if(i==5) {
+        break;
       }
     }
    // for (int k = 0; k < coords.length; k++) {

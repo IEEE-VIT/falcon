@@ -9,7 +9,7 @@ import 'package:path/path.dart';
 class DatabaseService {
 
 	Future<Database> initDatabase() async {
-		print(await getDatabasesPath());
+		//print(await getDatabasesPath());
 		// final Future<Database> _dataBase=
     Database database=await openDatabase(
 				join(await getDatabasesPath(), 'coordinateDatabase.db'),
@@ -22,7 +22,7 @@ class DatabaseService {
 				version: 1,
 		);
     // database=await _dataBase;
-		print('Database initialized!');
+		//print('Database initialized!');
 		// return database;
     return Future.value(database);
 	}
