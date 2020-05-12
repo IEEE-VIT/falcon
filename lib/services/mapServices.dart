@@ -35,9 +35,6 @@ class MapService {
           continue;
         }
       }
-      if(i==5) {
-        break;
-      }
     }
    // for (int k = 0; k < coords.length; k++) {
    //   double radius = 0;
